@@ -1,1 +1,1 @@
-export {default as TabMe} from './TabMe';
+export { default as IOSButton } from './IOSButton';

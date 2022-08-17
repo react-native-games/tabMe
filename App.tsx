@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabMe } from './src/components';
+import { TabMe } from './src/screens';
 
 const App = () => {
   return <TabMe />;

@@ -21,6 +21,7 @@ import {
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
+import { IOSButton } from '../components';
 
 const handleRotation = (
   targetRotate: Animated.SharedValue<number>,
@@ -38,6 +39,7 @@ const { width, height } = Dimensions.get('window');
 
 const TARGET_WIDTH = 88;
 const TabMe = () => {
+  const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
 
@@ -111,9 +113,11 @@ const TabMe = () => {
         setReset(false);
       }, 400);
     }
-    moveXAround();
-    moveYAround();
-  }, [reset]);
+    if (start) {
+      moveXAround();
+      moveYAround();
+    }
+  }, [reset, start]);
 
   const tabPanGestureEvent = useAnimatedGestureHandler<
     TapGestureHandlerGestureEvent,
@@ -123,11 +127,13 @@ const TabMe = () => {
     }
   >({
     onStart(e, ctx) {
-      targetTranslateX.value = withSpring(Math.random() * width * 2);
-      targetTranslateY.value = withSpring(Math.random() * width * 2);
-      runOnJS(setReset)(true);
-      runOnJS(setPoints)(points + 100);
+      if (start) {
+        targetTranslateX.value = withSpring(Math.random() * width * 2);
+        targetTranslateY.value = withSpring(Math.random() * width * 2);
+        runOnJS(setReset)(true);
+        runOnJS(setPoints)(points + 100);
 
+      }
     },
     onActive(e, ctx) { },
     onEnd(e) { },
@@ -161,7 +167,7 @@ const TabMe = () => {
   });
 
   return (
-    <TouchableHighlight onPress={() => setReset(true)} style={styles.container}>
+    <TouchableHighlight disabled={!start} onPress={() => setReset(true)} style={styles.container}>
       <View>
         <View style={styles.pointsContainer}>
           <Text style={styles.points}>{points}</Text>
@@ -175,6 +181,9 @@ const TabMe = () => {
             </Animated.View>
           </Animated.View>
         </TapGestureHandler>
+        <View style={styles.startBtnContainer}>
+          <IOSButton title='Start' onPress={() => setStart(true)} disabled={start} />
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -205,6 +214,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: height / 2 - 20,
     left: -width / 2 + 50,
+  },
+  startBtnContainer: {
+    position: 'absolute',
+    top: height / 2 - 20,
+    left: width / 114,
   },
   target: {
     width: TARGET_WIDTH,
