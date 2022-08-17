@@ -23,40 +23,41 @@ import {
 } from 'react-native-gesture-handler';
 
 const handleRotation = (
-  soulRotate: Animated.SharedValue<number>,
-  soul2: boolean,
+  targetRotate: Animated.SharedValue<number>,
+  target2: boolean,
 ) => {
   'worklet';
-  if (soul2) {
-    return `${soulRotate.value * 2 * Math.PI + 45}rad`;
+  if (target2) {
+    return `${targetRotate.value * 2 * Math.PI + 45}rad`;
   } else {
-    return `${soulRotate.value * 2 * Math.PI}rad`;
+    return `${targetRotate.value * 2 * Math.PI}rad`;
   }
 };
 
 const { width, height } = Dimensions.get('window');
-const SOUL_WIDTH = 88;
+
+const TARGET_WIDTH = 88;
 const TabMe = () => {
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
 
-  const soulRotate = useSharedValue(0);
-  const soulRotate2 = useSharedValue(0);
-  const soulScale = useSharedValue(0);
-  const soulOpacity = useSharedValue(0);
-  const soulTranslateX = useSharedValue(0);
-  const soulTranslateY = useSharedValue(0);
+  const targetRotate = useSharedValue(0);
+  const targetRotate2 = useSharedValue(0);
+  const targetScale = useSharedValue(0);
+  const targetOpacity = useSharedValue(0);
+  const targetTranslateX = useSharedValue(0);
+  const targetTranslateY = useSharedValue(0);
 
   // Squares rotating
   useEffect(() => {
-    soulScale.value = withRepeat(withTiming(8, { duration: 1000 }), -1, true);
-    soulOpacity.value = withRepeat(
+    targetScale.value = withRepeat(withTiming(8, { duration: 1000 }), -1, true);
+    targetOpacity.value = withRepeat(
       withTiming(0.8, { duration: 2000 }),
       -1,
       true,
     );
 
-    soulRotate.value = withRepeat(
+    targetRotate.value = withRepeat(
       withTiming(0.5, {
         duration: 2000,
         easing: Easing.out(Easing.cubic),
@@ -64,7 +65,7 @@ const TabMe = () => {
       -1,
     );
 
-    soulRotate2.value = withRepeat(
+    targetRotate2.value = withRepeat(
       withTiming(-1, {
         duration: 2000,
         easing: Easing.out(Easing.cubic),
@@ -73,23 +74,30 @@ const TabMe = () => {
     );
   }, []);
 
+  const randomNum = () => {
+    const nums = [-1, 1, -1, 1, -1, 1]
+    const n = nums[Math.floor(Math.random() * nums.length)]
+    console.log(n);
+
+    return Math.random() * n * width - TARGET_WIDTH
+  }
   const moveXAround = () => {
-    soulTranslateX.value = withRepeat(
+    targetTranslateX.value = withRepeat(
       withSequence(
-        withTiming(Math.random() * width, { duration: 1000 }),
-        withTiming(Math.random() * width, { duration: 1000 }),
-        withTiming(Math.random() * width, { duration: 1000 }),
+        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: 500 }),
       ),
       -1,
       true,
     );
   };
   const moveYAround = () => {
-    soulTranslateY.value = withRepeat(
+    targetTranslateY.value = withRepeat(
       withSequence(
-        withTiming(Math.random() * width, { duration: 1000 }),
-        withTiming(Math.random() * width, { duration: 1000 }),
-        withTiming(Math.random() * width, { duration: 1000 }),
+        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: 500 }),
       ),
       -1,
       true,
@@ -115,42 +123,40 @@ const TabMe = () => {
     }
   >({
     onStart(e, ctx) {
-      ctx.translateX = soulTranslateX.value;
-      ctx.translateY = soulTranslateY.value;
-      console.log('tabed');
+      targetTranslateX.value = withSpring(Math.random() * width * 2);
+      targetTranslateY.value = withSpring(Math.random() * width * 2);
       runOnJS(setReset)(true);
       runOnJS(setPoints)(points + 100);
-      soulTranslateX.value = withSpring(Math.random() * width);
-      soulTranslateY.value = withSpring(Math.random() * height);
+
     },
     onActive(e, ctx) { },
     onEnd(e) { },
   });
 
-  const soulAnimStyle = useAnimatedStyle(() => {
+  const targetAnimStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { translateX: soulTranslateX.value },
-        { translateY: soulTranslateY.value },
-        { rotate: handleRotation(soulRotate, false) },
+        { translateX: targetTranslateX.value },
+        { translateY: targetTranslateY.value },
+        { rotate: handleRotation(targetRotate, false) },
       ],
     };
   });
 
-  const soulAnimStyle2 = useAnimatedStyle(() => {
+  const targetAnimStyle2 = useAnimatedStyle(() => {
     return {
       transform: [
-        { translateX: soulTranslateX.value },
-        { translateY: soulTranslateY.value },
-        { rotate: handleRotation(soulRotate2, true) },
+        { translateX: targetTranslateX.value },
+        { translateY: targetTranslateY.value },
+        { rotate: handleRotation(targetRotate2, true) },
       ],
     };
   });
 
   const nousAnimStyle = useAnimatedStyle(() => {
     return {
-      opacity: soulOpacity.value,
-      transform: [{ scale: soulScale.value }],
+      opacity: targetOpacity.value,
+      transform: [{ scale: targetScale.value }],
     };
   });
 
@@ -162,9 +168,9 @@ const TabMe = () => {
         </View>
         <TapGestureHandler onGestureEvent={tabPanGestureEvent}>
           <Animated.View>
-            <Animated.View style={[styles.soul, soulAnimStyle]} />
+            <Animated.View style={[styles.target, targetAnimStyle]} />
             <Animated.View
-              style={[styles.soul, styles.innersoul, soulAnimStyle2]}>
+              style={[styles.target, styles.innertarget, targetAnimStyle2]}>
               <Animated.View style={[styles.nous, nousAnimStyle]} />
             </Animated.View>
           </Animated.View>
@@ -200,9 +206,9 @@ const styles = StyleSheet.create({
     top: height / 2 - 20,
     left: -width / 2 + 50,
   },
-  soul: {
-    width: SOUL_WIDTH,
-    height: SOUL_WIDTH,
+  target: {
+    width: TARGET_WIDTH,
+    height: TARGET_WIDTH,
     backgroundColor: '#ffff8a',
     borderRadius: 20,
     borderWidth: 3,
@@ -211,13 +217,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     opacity: 0.8,
   },
-  innersoul: {
+  innertarget: {
     opacity: 0.8,
     position: 'absolute',
     transform: [{ scale: 0.5 }],
   },
-  soulImage: {
-    width: SOUL_WIDTH,
-    height: SOUL_WIDTH,
+  targetImage: {
+    width: TARGET_WIDTH,
+    height: TARGET_WIDTH,
   },
 });
