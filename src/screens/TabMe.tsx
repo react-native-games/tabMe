@@ -21,6 +21,8 @@ import {
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
+import Slider from '@react-native-community/slider';
+
 import { IOSButton } from '../components';
 
 const handleRotation = (
@@ -42,6 +44,7 @@ const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(1500);
 
   const targetRotate = useSharedValue(0);
   const targetRotate2 = useSharedValue(0);
@@ -86,9 +89,9 @@ const TabMe = () => {
   const moveXAround = () => {
     targetTranslateX.value = withRepeat(
       withSequence(
-        withTiming(randomNum(), { duration: 500 }),
-        withTiming(randomNum(), { duration: 500 }),
-        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: speed }),
+        withTiming(randomNum(), { duration: speed }),
+        withTiming(randomNum(), { duration: speed }),
       ),
       -1,
       true,
@@ -97,9 +100,9 @@ const TabMe = () => {
   const moveYAround = () => {
     targetTranslateY.value = withRepeat(
       withSequence(
-        withTiming(randomNum(), { duration: 500 }),
-        withTiming(randomNum(), { duration: 500 }),
-        withTiming(randomNum(), { duration: 500 }),
+        withTiming(randomNum(), { duration: speed }),
+        withTiming(randomNum(), { duration: speed }),
+        withTiming(randomNum(), { duration: speed }),
       ),
       -1,
       true,
@@ -119,20 +122,13 @@ const TabMe = () => {
     }
   }, [reset, start]);
 
-  const tabPanGestureEvent = useAnimatedGestureHandler<
-    TapGestureHandlerGestureEvent,
-    {
-      translateX: number;
-      translateY: number;
-    }
-  >({
+  const tabPanGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart(e, ctx) {
       if (start) {
         targetTranslateX.value = withSpring(Math.random() * width * 2);
         targetTranslateY.value = withSpring(Math.random() * width * 2);
         runOnJS(setReset)(true);
-        runOnJS(setPoints)(points + 100);
-
+        runOnJS(setPoints)(points + 3000 - Number(speed));
       }
     },
     onActive(e, ctx) { },
@@ -169,8 +165,22 @@ const TabMe = () => {
   return (
     <TouchableHighlight disabled={!start} onPress={() => setReset(true)} style={styles.container}>
       <View>
+        <View style={styles.sliderContainer}>
+
+          <Slider
+            style={{ width: width - 20, height: 40 }}
+            value={1500}
+            inverted
+            minimumValue={500}
+            maximumValue={2500}
+            minimumTrackTintColor="red"
+            maximumTrackTintColor="cyan"
+            onSlidingComplete={value => setSpeed(value)}
+            disabled={start}
+          />
+        </View>
         <View style={styles.pointsContainer}>
-          <Text style={styles.points}>{points}</Text>
+          <Text style={styles.points}>{points.toFixed(2)}</Text>
         </View>
         <TapGestureHandler onGestureEvent={tabPanGestureEvent}>
           <Animated.View>
@@ -212,13 +222,18 @@ const styles = StyleSheet.create({
   },
   pointsContainer: {
     position: 'absolute',
-    top: height / 2 - 20,
-    left: -width / 2 + 50,
+    top: height / 2 - 25,
+    left: -width / 2 + 55,
+  },
+  sliderContainer: {
+    position: 'absolute',
+    top: -height / 2 + 100,
+    right: -150,
   },
   startBtnContainer: {
     position: 'absolute',
     top: height / 2 - 20,
-    left: width / 114,
+    left: 0,
   },
   target: {
     width: TARGET_WIDTH,
