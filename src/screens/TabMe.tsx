@@ -155,7 +155,7 @@ const TabMe = () => {
     };
   });
 
-  const nousAnimStyle = useAnimatedStyle(() => {
+  const innerColorAnimStyle = useAnimatedStyle(() => {
     return {
       opacity: targetOpacity.value,
       transform: [{ scale: targetScale.value }],
@@ -166,7 +166,11 @@ const TabMe = () => {
     <TouchableHighlight disabled={!start} onPress={() => setReset(true)} style={styles.container}>
       <View>
         <View style={styles.sliderContainer}>
-
+          <View style={styles.valuesContainer}>
+            <Text style={styles.values}>500</Text>
+            <Text style={styles.values}>1500</Text>
+            <Text style={styles.values}>2500</Text>
+          </View>
           <Slider
             style={{ width: width - 20, height: 40 }}
             value={1500}
@@ -187,7 +191,7 @@ const TabMe = () => {
             <Animated.View style={[styles.target, targetAnimStyle]} />
             <Animated.View
               style={[styles.target, styles.innertarget, targetAnimStyle2]}>
-              <Animated.View style={[styles.nous, nousAnimStyle]} />
+              <Animated.View style={[styles.innerColor, innerColorAnimStyle]} />
             </Animated.View>
           </Animated.View>
         </TapGestureHandler>
@@ -208,7 +212,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#192153',
   },
-  nous: {
+  innertarget: {
+    opacity: 0.8,
+    position: 'absolute',
+    transform: [{ scale: 0.5 }],
+  },
+  innerColor: {
     width: 10,
     height: 10,
     backgroundColor: 'cyan',
@@ -218,11 +227,11 @@ const styles = StyleSheet.create({
   },
   points: {
     color: '#fff',
-    fontSize: 50,
+    fontSize: 30,
   },
   pointsContainer: {
     position: 'absolute',
-    top: height / 2 - 25,
+    top: height / 2 - 5,
     left: -width / 2 + 55,
   },
   sliderContainer: {
@@ -246,10 +255,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     opacity: 0.8,
   },
-  innertarget: {
-    opacity: 0.8,
-    position: 'absolute',
-    transform: [{ scale: 0.5 }],
+  valuesContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  values: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: '800'
   },
   targetImage: {
     width: TARGET_WIDTH,
