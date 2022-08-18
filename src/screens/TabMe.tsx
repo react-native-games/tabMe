@@ -13,7 +13,6 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withRepeat,
   withSequence,
   withSpring,
@@ -21,7 +20,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   GestureHandlerRootView,
-  PanGestureHandlerGestureEvent,
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -177,7 +175,11 @@ const TabMe = () => {
   });
 
   return (
-    <TouchableOpacity style={styles.container} disabled={!start} onPress={() => setReset(true)}  >
+    <TouchableOpacity
+      onPress={() => setReset(true)}
+      style={styles.container}
+      disabled={!start}
+    >
       <View style={styles.sliderContainer}>
         <View style={styles.valuesContainer}>
           <Text style={styles.values}>500</Text>
@@ -197,28 +199,44 @@ const TabMe = () => {
           disabled={start}
         />
       </View>
-      <View style={styles.pointsContainer}>
-        <Text style={styles.points}>{points.toFixed(0)}</Text>
-      </View>
-      <TapGestureHandler onGestureEvent={tapPanGestureEvent}
-        maxDurationMs={200}
-        maxDelayMs={200}
-      >
-        <Animated.View>
-          <Animated.View style={[styles.target, targetAnimStyle]} />
-          <Animated.View
-            style={[styles.target, styles.innertarget, targetAnimStyle2]}>
-            <Animated.View style={[styles.innerColor, innerColorAnimStyle]} />
-            {showLottieAnim.value ?
-              <RenderAnimation source={source} style={{ transform: [{ scale: 3 }] }} />
-              : null
-            }
+      <GestureHandlerRootView>
+        <TapGestureHandler onGestureEvent={tapPanGestureEvent}
+          maxDurationMs={200}
+          maxDelayMs={200}
+          maxDeltaX={44}
+          maxDeltaY={44}
+        >
+          <Animated.View>
+            <Animated.View style={[styles.target, targetAnimStyle]} />
+            <Animated.View
+              style={[styles.target, styles.innertarget, targetAnimStyle2]}>
+              <Animated.View
+                style={[styles.innerColor, innerColorAnimStyle]}
+              />
+              {showLottieAnim.value ?
+                <RenderAnimation
+                  source={source}
+                  style={{ transform: [{ scale: 3 }] }}
+                  soundName='laser.wav'
+                  soundDelay={1}
+                />
+                : null
+              }
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </TapGestureHandler>
-      <View style={styles.startBtnContainer}>
-        <IOSButton title='Start' onPress={() => setStart(true)} disabled={start} />
+        </TapGestureHandler>
+      </GestureHandlerRootView>
+      {!start ? <View style={styles.startBtnContainer}>
+        <IOSButton
+          title='Start'
+          onPress={() => setStart(true)} disabled={start}
+        />
       </View>
+        :
+        <View style={styles.pointsContainer}>
+          <Text style={styles.points}>{points.toFixed(0)}</Text>
+        </View>
+      }
     </TouchableOpacity>
   );
 };

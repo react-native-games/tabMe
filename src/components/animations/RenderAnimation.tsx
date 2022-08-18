@@ -1,8 +1,7 @@
 import React, { FC, useLayoutEffect, useRef } from 'react';
 import LottieView from 'lottie-react-native';
 import AnimatedLottieView from 'lottie-react-native';
-// import { playsound } from '../utils';
-
+import { playsound } from '../../utils';
 interface Props {
   source: string;
   loop?: boolean;
@@ -22,18 +21,18 @@ const RenderAnimation: FC<Props> = ({
 
   useLayoutEffect(() => {
     if (animation.current) animation.current.play();
-
   }, []);
-  // useLayoutEffect(() => {
-  //   if (animation.current) animation.current.play();
 
-  //   if (soundName && soundDelay) {
-  //     const { sound } = playsound(soundName, soundDelay);
-  //     return () => {
-  //       sound.release();
-  //     };
-  //   }
-  // }, [soundName, soundDelay]);
+  useLayoutEffect(() => {
+    if (animation.current) animation.current.play();
+
+    if (soundName && soundDelay) {
+      const { sound } = playsound(soundName, soundDelay);
+      return () => {
+        sound.release();
+      };
+    }
+  }, [soundName, soundDelay]);
 
   return (
     <LottieView
