@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -18,6 +19,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {
+  GestureHandlerRootView,
+  PanGestureHandlerGestureEvent,
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -82,8 +85,6 @@ const TabMe = () => {
   const randomNum = () => {
     const nums = [-1, 1, -1, 1, -1, 1]
     const n = nums[Math.floor(Math.random() * nums.length)]
-    console.log(n);
-
     return Math.random() * n * width - TARGET_WIDTH
   }
   const moveXAround = () => {
@@ -111,28 +112,34 @@ const TabMe = () => {
 
   // Squares moving around
   useEffect(() => {
-    if (reset) {
+    if (reset)
       setTimeout(() => {
         setReset(false);
       }, 400);
-    }
+
     if (start) {
       moveXAround();
       moveYAround();
     }
   }, [reset, start]);
 
-  const tabPanGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
-    onStart(e, ctx) {
+  const tapPanGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+    onStart: (e, ctx) => {
+      console.log('tab');
       if (start) {
-        targetTranslateX.value = withSpring(Math.random() * width * 2);
-        targetTranslateY.value = withSpring(Math.random() * width * 2);
         runOnJS(setReset)(true);
         runOnJS(setPoints)(points + 3000 - Number(speed));
+
+        targetTranslateX.value = withSpring(Math.random() * width * 2);
+        targetTranslateY.value = withSpring(Math.random() * width * 2);
+
       }
     },
-    onActive(e, ctx) { },
-    onEnd(e) { },
+    onActive: (e, ctx) => {
+      console.log('tab2');
+
+    },
+    onEnd: (e) => { },
   });
 
   const targetAnimStyle = useAnimatedStyle(() => {
@@ -163,43 +170,45 @@ const TabMe = () => {
   });
 
   return (
-    <TouchableHighlight disabled={!start} onPress={() => setReset(true)} style={styles.container}>
-      <View>
-        <View style={styles.sliderContainer}>
-          <View style={styles.valuesContainer}>
-            <Text style={styles.values}>500</Text>
-            <Text style={styles.values}>1500</Text>
-            <Text style={styles.values}>2500</Text>
-          </View>
-          <Slider
-            style={{ width: width - 20, height: 40 }}
-            value={1500}
-            inverted
-            minimumValue={500}
-            maximumValue={2500}
-            minimumTrackTintColor="red"
-            maximumTrackTintColor="cyan"
-            onSlidingComplete={value => setSpeed(value)}
-            disabled={start}
-          />
+    <TouchableOpacity style={styles.container} disabled={!start} onPress={() => setReset(true)}  >
+      <View style={styles.sliderContainer}>
+        <View style={styles.valuesContainer}>
+          <Text style={styles.values}>500</Text>
+          <Text style={[styles.values, { marginLeft: 10 }]}>1500</Text>
+          <Text style={styles.values}>2500</Text>
         </View>
-        <View style={styles.pointsContainer}>
-          <Text style={styles.points}>{points.toFixed(2)}</Text>
-        </View>
-        <TapGestureHandler onGestureEvent={tabPanGestureEvent}>
-          <Animated.View>
-            <Animated.View style={[styles.target, targetAnimStyle]} />
-            <Animated.View
-              style={[styles.target, styles.innertarget, targetAnimStyle2]}>
-              <Animated.View style={[styles.innerColor, innerColorAnimStyle]} />
-            </Animated.View>
-          </Animated.View>
-        </TapGestureHandler>
-        <View style={styles.startBtnContainer}>
-          <IOSButton title='Start' onPress={() => setStart(true)} disabled={start} />
-        </View>
+        <Slider
+          style={{ width: width - 20, height: 40 }}
+          value={1500}
+          inverted
+          tapToSeek
+          minimumValue={500}
+          maximumValue={2500}
+          minimumTrackTintColor="red"
+          maximumTrackTintColor="cyan"
+          onSlidingComplete={value => setSpeed(value)}
+          disabled={start}
+        />
       </View>
-    </TouchableHighlight>
+      <View style={styles.pointsContainer}>
+        <Text style={styles.points}>{points.toFixed(0)}</Text>
+      </View>
+      <TapGestureHandler onGestureEvent={tapPanGestureEvent}
+        maxDurationMs={200}
+        maxDelayMs={200}
+      >
+        <Animated.View>
+          <Animated.View style={[styles.target, targetAnimStyle]} />
+          <Animated.View
+            style={[styles.target, styles.innertarget, targetAnimStyle2]}>
+            <Animated.View style={[styles.innerColor, innerColorAnimStyle]} />
+          </Animated.View>
+        </Animated.View>
+      </TapGestureHandler>
+      <View style={styles.startBtnContainer}>
+        <IOSButton title='Start' onPress={() => setStart(true)} disabled={start} />
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -208,8 +217,8 @@ export default TabMe;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignContent: 'space-between',
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#192153',
   },
   innertarget: {
@@ -225,24 +234,29 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: 'cyan',
   },
+  innerColorTransparent: {
+    width: TARGET_WIDTH,
+    height: TARGET_WIDTH,
+    backgroundColor: 'red'
+  },
   points: {
     color: '#fff',
     fontSize: 30,
   },
   pointsContainer: {
     position: 'absolute',
-    top: height / 2 - 5,
-    left: -width / 2 + 55,
+    top: height - 90,
+    left: 20,
   },
   sliderContainer: {
     position: 'absolute',
-    top: -height / 2 + 100,
-    right: -150,
+    top: 50,
+    left: 10,
   },
   startBtnContainer: {
     position: 'absolute',
-    top: height / 2 - 20,
-    left: 0,
+    top: height - 100,
+    left: width / 2 - 50,
   },
   target: {
     width: TARGET_WIDTH,
@@ -254,6 +268,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 0.8,
+    alignSelf: 'center'
   },
   valuesContainer: {
     flex: 1,
