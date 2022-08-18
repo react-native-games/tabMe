@@ -13,6 +13,7 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withSpring,
@@ -26,7 +27,9 @@ import {
 } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
 
-import { IOSButton } from '../components';
+import { IOSButton, RenderAnimation } from '../components';
+
+let source = require('../assets/animations/exploding-circles.json');
 
 const handleRotation = (
   targetRotate: Animated.SharedValue<number>,
@@ -49,12 +52,13 @@ const TabMe = () => {
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
 
-  const targetRotate = useSharedValue(0);
-  const targetRotate2 = useSharedValue(0);
-  const targetScale = useSharedValue(0);
-  const targetOpacity = useSharedValue(0);
-  const targetTranslateX = useSharedValue(0);
-  const targetTranslateY = useSharedValue(0);
+  const targetRotate = useSharedValue<number>(0);
+  const targetRotate2 = useSharedValue<number>(0);
+  const targetScale = useSharedValue<number>(0);
+  const targetOpacity = useSharedValue<number>(0);
+  const targetTranslateX = useSharedValue<number>(0);
+  const targetTranslateY = useSharedValue<number>(0);
+  const showLottieAnim = useSharedValue<boolean>(false);
 
   // Squares rotating
   useEffect(() => {
@@ -129,7 +133,7 @@ const TabMe = () => {
       if (start) {
         runOnJS(setReset)(true);
         runOnJS(setPoints)(points + 3000 - Number(speed));
-
+        showLottieAnim.value = true
         targetTranslateX.value = withSpring(Math.random() * width * 2);
         targetTranslateY.value = withSpring(Math.random() * width * 2);
 
@@ -138,8 +142,11 @@ const TabMe = () => {
     onActive: (e, ctx) => {
       console.log('tab2');
 
+
     },
-    onEnd: (e) => { },
+    onEnd: (e) => {
+      showLottieAnim.value = false
+    },
   });
 
   const targetAnimStyle = useAnimatedStyle(() => {
@@ -202,6 +209,10 @@ const TabMe = () => {
           <Animated.View
             style={[styles.target, styles.innertarget, targetAnimStyle2]}>
             <Animated.View style={[styles.innerColor, innerColorAnimStyle]} />
+            {showLottieAnim.value ?
+              <RenderAnimation source={source} style={{ transform: [{ scale: 3 }] }} />
+              : null
+            }
           </Animated.View>
         </Animated.View>
       </TapGestureHandler>
