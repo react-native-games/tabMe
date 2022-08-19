@@ -140,7 +140,6 @@ const TabMe = () => {
     onActive: (e, ctx) => {
       console.log('tab2');
 
-
     },
     onEnd: (e) => {
       showLottieAnim.value = false
@@ -160,8 +159,6 @@ const TabMe = () => {
   const targetAnimStyle2 = useAnimatedStyle(() => {
     return {
       transform: [
-        { translateX: targetTranslateX.value },
-        { translateY: targetTranslateY.value },
         { rotate: handleRotation(targetRotate2, true) },
       ],
     };
@@ -174,9 +171,13 @@ const TabMe = () => {
     };
   });
 
+  const resetHandler = () => {
+    setReset(true);
+  }
+
   return (
     <TouchableOpacity
-      onPress={() => setReset(true)}
+      onPress={resetHandler}
       style={styles.container}
       disabled={!start}
     >
@@ -199,43 +200,41 @@ const TabMe = () => {
           disabled={start}
         />
       </View>
-      <GestureHandlerRootView>
-        <TapGestureHandler onGestureEvent={tapPanGestureEvent}
-          maxDurationMs={200}
-          maxDelayMs={200}
-          maxDeltaX={44}
-          maxDeltaY={44}
-        >
-          <Animated.View>
-            <Animated.View style={[styles.target, targetAnimStyle]} />
-            <Animated.View
-              style={[styles.target, styles.innertarget, targetAnimStyle2]}>
-              <Animated.View
-                style={[styles.innerColor, innerColorAnimStyle]}
-              />
-              {showLottieAnim.value ?
-                <RenderAnimation
-                  source={source}
-                  style={{ transform: [{ scale: 3 }] }}
-                  soundName='laser.wav'
-                  soundDelay={1}
-                />
-                : null
-              }
-            </Animated.View>
-          </Animated.View>
-        </TapGestureHandler>
-      </GestureHandlerRootView>
-      {!start ? <View style={styles.startBtnContainer}>
-        <IOSButton
-          title='Start'
-          onPress={() => setStart(true)} disabled={start}
-        />
-      </View>
-        :
-        <View style={styles.pointsContainer}>
-          <Text style={styles.points}>{points.toFixed(0)}</Text>
+      <TapGestureHandler onGestureEvent={tapPanGestureEvent}
+        maxDurationMs={200}
+        maxDelayMs={200}
+        maxDeltaX={4}
+        maxDeltaY={4}
+        enabled={start}
+      >
+        <Animated.View
+          style={[styles.target, targetAnimStyle]}>
+          <Animated.View style={[styles.target, styles.innertarget, targetAnimStyle2]} />
+          <Animated.View
+            style={[styles.innerColor, innerColorAnimStyle]}
+          />
+          {showLottieAnim.value ?
+            <RenderAnimation
+              source={source}
+              style={{ transform: [{ scale: 3 }] }}
+              soundName='laser.wav'
+              soundDelay={1}
+            />
+            : null
+          }
+        </Animated.View>
+      </TapGestureHandler>
+      {
+        !start ? <View style={styles.startBtnContainer}>
+          <IOSButton
+            title='Start'
+            onPress={() => setStart(true)} disabled={start}
+          />
         </View>
+          :
+          <View style={styles.pointsContainer}>
+            <Text style={styles.points}>{points.toFixed(0)}</Text>
+          </View>
       }
     </TouchableOpacity>
   );
@@ -263,11 +262,6 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: 'cyan',
   },
-  innerColorTransparent: {
-    width: TARGET_WIDTH,
-    height: TARGET_WIDTH,
-    backgroundColor: 'red'
-  },
   points: {
     color: '#fff',
     fontSize: 30,
@@ -290,6 +284,7 @@ const styles = StyleSheet.create({
   target: {
     width: TARGET_WIDTH,
     height: TARGET_WIDTH,
+    alignSelf: 'center',
     backgroundColor: '#ffff8a',
     borderRadius: 20,
     borderWidth: 3,
@@ -297,7 +292,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 0.8,
-    alignSelf: 'center'
+    margin: 0,
   },
   valuesContainer: {
     flex: 1,
@@ -309,9 +304,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     fontWeight: '800'
-  },
-  targetImage: {
-    width: TARGET_WIDTH,
-    height: TARGET_WIDTH,
   },
 });
