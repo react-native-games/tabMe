@@ -4,15 +4,18 @@ import {
   Text,
   TouchableHighlight,
   TouchableOpacity,
+  Vibration,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Animated, {
   Easing,
+  interpolate,
   runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withSpring,
@@ -28,6 +31,13 @@ import Slider from '@react-native-community/slider';
 import { IOSButton, RenderAnimation } from '../components';
 
 let source = require('../assets/animations/exploding-circles.json');
+
+const colors = {
+  black: "#323F4E",
+  button: "#F76A6A",
+  sink: "#192153",
+  text: "#ffffff",
+};
 
 const handleRotation = (
   targetRotate: Animated.SharedValue<number>,
@@ -49,6 +59,7 @@ const TabMe = () => {
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
+  const [duration, setDuration] = useState(5);
 
   const targetRotate = useSharedValue<number>(0);
   const targetRotate2 = useSharedValue<number>(0);
@@ -57,6 +68,9 @@ const TabMe = () => {
   const targetTranslateX = useSharedValue<number>(0);
   const targetTranslateY = useSharedValue<number>(0);
   const showLottieAnim = useSharedValue<boolean>(false);
+
+  const timerAnimation = useSharedValue(height);
+  const buttonAnimation = useSharedValue(0);
 
   // Squares rotating
   useEffect(() => {
@@ -175,6 +189,39 @@ const TabMe = () => {
     setReset(true);
   }
 
+
+  const animationHandler = () => {
+    setStart(true)
+    buttonAnimation.value = withTiming(1, { duration: 300 });
+
+    timerAnimation.value = withSequence(
+      withDelay(300, withTiming(0, { duration: 300 })),
+      (timerAnimation.value = withTiming(height, {
+        duration: duration * 1000,
+      }))
+    );
+    buttonAnimation.value = withDelay(
+      duration * 1000,
+      withTiming(0, { duration: 300 })
+    );
+    Vibration.cancel();
+    Vibration.vibrate();
+  };
+
+  useEffect(() => {
+    // animationHandler();
+  }, [duration]);
+
+  const sinkStyle = useAnimatedStyle(() => {
+    return { transform: [{ translateY: timerAnimation.value }] };
+  });
+
+  const buttonStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
+    const translateY = interpolate(buttonAnimation.value, [0, 1], [0, 200]);
+    return { opacity, transform: [{ translateY }] };
+  });
+
   return (
     <TouchableOpacity
       onPress={resetHandler}
@@ -200,6 +247,9 @@ const TabMe = () => {
           disabled={start}
         />
       </View>
+      <Animated.View
+        style={[StyleSheet.absoluteFillObject, styles.sink, sinkStyle]}
+      />
       <TapGestureHandler onGestureEvent={tapPanGestureEvent}
         maxDurationMs={200}
         maxDelayMs={200}
@@ -225,12 +275,20 @@ const TabMe = () => {
         </Animated.View>
       </TapGestureHandler>
       {
-        !start ? <View style={styles.startBtnContainer}>
-          <IOSButton
-            title='Start'
-            onPress={() => setStart(true)} disabled={start}
-          />
-        </View>
+        !start ? <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            {
+              justifyContent: "flex-end",
+              alignItems: "center",
+              paddingBottom: 100,
+            },
+            buttonStyle,
+          ]}>
+          <TouchableOpacity onPress={animationHandler}>
+            <View style={styles.roundButton} />
+          </TouchableOpacity>
+        </Animated.View>
           :
           <View style={styles.pointsContainer}>
             <Text style={styles.points}>{points.toFixed(0)}</Text>
@@ -247,7 +305,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: 'space-between',
     justifyContent: 'center',
-    backgroundColor: '#192153',
+    backgroundColor: '#474e7f',
   },
   innertarget: {
     opacity: 0.8,
@@ -270,6 +328,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: height - 90,
     left: 20,
+  },
+  roundButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 80,
+    backgroundColor: colors.button,
+  },
+  sink: {
+    height: height,
+    width: width,
+    backgroundColor: colors.sink,
+    opacity: 0.5
   },
   sliderContainer: {
     position: 'absolute',
