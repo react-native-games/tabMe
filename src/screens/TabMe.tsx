@@ -2,7 +2,6 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   Vibration,
   View,
@@ -22,16 +21,17 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {
-  GestureHandlerRootView,
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
 
-import { IOSButton, RenderAnimation } from '../components';
+import { RenderAnimation } from '../components';
 
 let source = require('../assets/animations/exploding-circles.json');
 
+const { width, height } = Dimensions.get('window');
+const TARGET_WIDTH = 88;
 const colors = {
   black: "#323F4E",
   button: "#F76A6A",
@@ -51,15 +51,12 @@ const handleRotation = (
   }
 };
 
-const { width, height } = Dimensions.get('window');
-
-const TARGET_WIDTH = 88;
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
-  const [duration, setDuration] = useState(5);
+  const [duration, setDuration] = useState<number>(5);
 
   const targetRotate = useSharedValue<number>(0);
   const targetRotate2 = useSharedValue<number>(0);
@@ -228,6 +225,9 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
+      {/* <Animated.View
+        style={[StyleSheet.absoluteFillObject, styles.sink, sinkStyle]}
+      /> */}
       <View style={styles.sliderContainer}>
         <View style={styles.valuesContainer}>
           <Text style={styles.values}>500</Text>
@@ -247,9 +247,7 @@ const TabMe = () => {
           disabled={start}
         />
       </View>
-      <Animated.View
-        style={[StyleSheet.absoluteFillObject, styles.sink, sinkStyle]}
-      />
+
       <TapGestureHandler onGestureEvent={tapPanGestureEvent}
         maxDurationMs={200}
         maxDelayMs={200}
@@ -274,25 +272,20 @@ const TabMe = () => {
           }
         </Animated.View>
       </TapGestureHandler>
-      {
-        !start ? <Animated.View
-          style={[
-            StyleSheet.absoluteFillObject,
-            {
-              justifyContent: "flex-end",
-              alignItems: "center",
-              paddingBottom: 100,
-            },
-            buttonStyle,
-          ]}>
-          <TouchableOpacity onPress={animationHandler}>
-            <View style={styles.roundButton} />
-          </TouchableOpacity>
-        </Animated.View>
-          :
-          <View style={styles.pointsContainer}>
-            <Text style={styles.points}>{points.toFixed(0)}</Text>
-          </View>
+      <Animated.View
+        style={[
+          styles.startBtnContainer,
+          buttonStyle,
+        ]}>
+        <TouchableOpacity onPress={animationHandler}>
+          <View style={styles.roundButton} />
+        </TouchableOpacity>
+      </Animated.View>
+
+      {start ?
+        <View style={styles.pointsContainer}>
+          <Text style={styles.points}>{points.toFixed(0)}</Text>
+        </View> : null
       }
     </TouchableOpacity>
   );
@@ -339,7 +332,6 @@ const styles = StyleSheet.create({
     height: height,
     width: width,
     backgroundColor: colors.sink,
-    opacity: 0.5
   },
   sliderContainer: {
     position: 'absolute',
@@ -348,7 +340,7 @@ const styles = StyleSheet.create({
   },
   startBtnContainer: {
     position: 'absolute',
-    top: height - 100,
+    top: height - 150,
     left: width / 2 - 50,
   },
   target: {
