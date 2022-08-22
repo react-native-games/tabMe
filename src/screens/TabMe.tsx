@@ -26,17 +26,20 @@ import {
 import Slider from '@react-native-community/slider';
 
 import { RenderAnimation } from '../components';
+import { cache } from '../utils';
 
-let source = require('../assets/animations/exploding-circles.json');
+const explodingCircles = require('../assets/animations/exploding-circles.json');
 
 const { width, height } = Dimensions.get('window');
 const TARGET_WIDTH = 88;
 const colors = {
   black: "#323F4E",
   button: "#F76A6A",
+  buttonText: '#f6f3be',
   darkBlue: "#192153",
   sink: "#f9f10e",
   text: "#ffffff",
+  target: '#ffff8a'
 };
 
 const handleRotation = (
@@ -85,11 +88,34 @@ const TabMe = () => {
       )
     }
 
+  const getPoints = async () => {
+    const p = await cache.get('points');
+    console.log('points', p);
+  }
+
+  useEffect(() => {
+    getPoints()
+  }, [])
+
+  const savePoints = async () => {
+
+    const savedPoints = await cache.get('points')
+    console.log('savePoints', savedPoints);
+    if (savedPoints) {
+      let pnts = savedPoints + points;
+      cache.set('points', pnts)
+    } else {
+      cache.set('points', points)
+
+    }
+  }
+
   const timerLevelAnimStyle = useAnimatedStyle(() => {
     /* Check if time is up */
     if (start && Math.round(timerLevelAnimation.value) > height) {
       buttonAnimation.value = withTiming(0, { duration: 300 })
       runOnJS(setStart)(false);
+      runOnJS(savePoints)()
       targetTranslateX.value = withSpring(0)
       targetTranslateY.value = withSpring(0)
 
@@ -233,9 +259,6 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
-      <Animated.View
-        style={[styles.timerLevel, timerLevelAnimStyle]}
-      />
       <View style={styles.sliderContainer}>
         <View style={styles.valuesContainer}>
           <Text style={styles.values}>500</Text>
@@ -255,6 +278,10 @@ const TabMe = () => {
           disabled={start}
         />
       </View>
+      <Animated.View
+        style={[styles.timerLevel, timerLevelAnimStyle]}
+      />
+
 
       <TapGestureHandler onGestureEvent={tapPanGestureEvent}
         maxDurationMs={200}
@@ -271,7 +298,7 @@ const TabMe = () => {
           />
           {showLottieAnim.value ?
             <RenderAnimation
-              source={source}
+              source={explodingCircles}
               style={{ transform: [{ scale: 3 }] }}
               soundName='laser.wav'
               soundDelay={1}
@@ -286,7 +313,9 @@ const TabMe = () => {
           startBtnStyle,
         ]}>
         <TouchableOpacity onPress={timerLevelAnim}>
-          <View style={styles.startButton} />
+          <View style={styles.startButton} >
+            <Text style={styles.startButtonText} >Start</Text>
+          </View>
         </TouchableOpacity>
       </Animated.View>
 
@@ -331,10 +360,16 @@ const styles = StyleSheet.create({
     left: 20,
   },
   startButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 80,
+    width: TARGET_WIDTH,
+    height: TARGET_WIDTH,
+    borderRadius: TARGET_WIDTH,
     backgroundColor: colors.button,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  startButtonText: {
+    fontSize: 30,
+    color: colors.buttonText
   },
   sliderContainer: {
     position: 'absolute',
@@ -344,13 +379,13 @@ const styles = StyleSheet.create({
   startBtnContainer: {
     position: 'absolute',
     top: height - 150,
-    left: width / 2 - 50,
+    left: width / 2 - (TARGET_WIDTH / 2),
   },
   target: {
     width: TARGET_WIDTH,
     height: TARGET_WIDTH,
     alignSelf: 'center',
-    backgroundColor: '#ffff8a',
+    backgroundColor: colors.target,
     borderRadius: 20,
     borderWidth: 3,
     borderColor: 'cyan',
@@ -372,7 +407,7 @@ const styles = StyleSheet.create({
   },
   values: {
     fontSize: 20,
-    color: '#fff',
+    color: colors.buttonText,
     fontWeight: '800'
   },
 });

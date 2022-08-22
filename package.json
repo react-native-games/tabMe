@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/slider": "^4.3.0",
     "lottie-ios": "^3.4.0",
     "lottie-react-native": "^5.1.4",
