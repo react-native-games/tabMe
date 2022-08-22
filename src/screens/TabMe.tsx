@@ -14,7 +14,6 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withRepeat,
   withSequence,
   withSpring,
@@ -35,7 +34,8 @@ const TARGET_WIDTH = 88;
 const colors = {
   black: "#323F4E",
   button: "#F76A6A",
-  sink: "#192153",
+  darkBlue: "#192153",
+  sink: "#f9f10e",
   text: "#ffffff",
 };
 
@@ -56,7 +56,7 @@ const TabMe = () => {
   const [reset, setReset] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
-  const [duration, setDuration] = useState<number>(5);
+  const [duration, setDuration] = useState<number>(5000);
 
   const targetRotate = useSharedValue<number>(0);
   const targetRotate2 = useSharedValue<number>(0);
@@ -66,10 +66,46 @@ const TabMe = () => {
   const targetTranslateY = useSharedValue<number>(0);
   const showLottieAnim = useSharedValue<boolean>(false);
 
-  const timerAnimation = useSharedValue(height);
+  const timerLevelAnimation = useSharedValue(height);
   const buttonAnimation = useSharedValue(0);
 
-  // Squares rotating
+  const timerLevelAnim =
+    () => {
+      buttonAnimation.value = withTiming(1, { duration: 300 });
+      setStart(true)
+
+      timerLevelAnimation.value = withSequence(
+        withTiming(0, { duration: 300 }),
+        /* Why add +10: Because at the beginning the timerLevel is at the bottom,
+        and at the end we check again if is is at the bottom. 
+        So we add 10 and at the end we check if timerLevel is bigger than height.  */
+        withTiming(height + 10, {
+          duration: duration,
+        }),
+      )
+    }
+
+  const timerLevelAnimStyle = useAnimatedStyle(() => {
+    /* Check if time is up */
+    if (start && Math.round(timerLevelAnimation.value) > height) {
+      buttonAnimation.value = withTiming(0, { duration: 300 })
+      runOnJS(setStart)(false);
+      targetTranslateX.value = withSpring(0)
+      targetTranslateY.value = withSpring(0)
+
+    }
+
+    return { transform: [{ translateY: timerLevelAnimation.value }] };
+  });
+
+  const startBtnStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
+    const translateY = interpolate(buttonAnimation.value, [0, 1], [0, 200]);
+    return { opacity, transform: [{ translateY }] };
+  });
+
+
+  // Target rotating
   useEffect(() => {
     targetScale.value = withRepeat(withTiming(8, { duration: 1000 }), -1, true);
     targetOpacity.value = withRepeat(
@@ -100,6 +136,7 @@ const TabMe = () => {
     const n = nums[Math.floor(Math.random() * nums.length)]
     return Math.random() * n * width - TARGET_WIDTH
   }
+
   const moveXAround = () => {
     targetTranslateX.value = withRepeat(
       withSequence(
@@ -111,6 +148,7 @@ const TabMe = () => {
       true,
     );
   };
+
   const moveYAround = () => {
     targetTranslateY.value = withRepeat(
       withSequence(
@@ -123,7 +161,7 @@ const TabMe = () => {
     );
   };
 
-  // Squares moving around
+  // Target moving around
   useEffect(() => {
     if (reset)
       setTimeout(() => {
@@ -140,8 +178,11 @@ const TabMe = () => {
     onStart: (e, ctx) => {
       console.log('tab');
       if (start) {
-        runOnJS(setReset)(true);
+
+        // runOnJS(setReset)(true);
         runOnJS(setPoints)(points + 3000 - Number(speed));
+        runOnJS(setDuration)(duration + 100);
+        runOnJS(timerLevelAnim)()
         showLottieAnim.value = true
         targetTranslateX.value = withSpring(Math.random() * width * 2);
         targetTranslateY.value = withSpring(Math.random() * width * 2);
@@ -186,48 +227,15 @@ const TabMe = () => {
     setReset(true);
   }
 
-
-  const animationHandler = () => {
-    setStart(true)
-    buttonAnimation.value = withTiming(1, { duration: 300 });
-
-    timerAnimation.value = withSequence(
-      withDelay(300, withTiming(0, { duration: 300 })),
-      (timerAnimation.value = withTiming(height, {
-        duration: duration * 1000,
-      }))
-    );
-    buttonAnimation.value = withDelay(
-      duration * 1000,
-      withTiming(0, { duration: 300 })
-    );
-    Vibration.cancel();
-    Vibration.vibrate();
-  };
-
-  useEffect(() => {
-    // animationHandler();
-  }, [duration]);
-
-  const sinkStyle = useAnimatedStyle(() => {
-    return { transform: [{ translateY: timerAnimation.value }] };
-  });
-
-  const buttonStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
-    const translateY = interpolate(buttonAnimation.value, [0, 1], [0, 200]);
-    return { opacity, transform: [{ translateY }] };
-  });
-
   return (
     <TouchableOpacity
       onPress={resetHandler}
       style={styles.container}
       disabled={!start}
     >
-      {/* <Animated.View
-        style={[StyleSheet.absoluteFillObject, styles.sink, sinkStyle]}
-      /> */}
+      <Animated.View
+        style={[styles.timerLevel, timerLevelAnimStyle]}
+      />
       <View style={styles.sliderContainer}>
         <View style={styles.valuesContainer}>
           <Text style={styles.values}>500</Text>
@@ -275,10 +283,10 @@ const TabMe = () => {
       <Animated.View
         style={[
           styles.startBtnContainer,
-          buttonStyle,
+          startBtnStyle,
         ]}>
-        <TouchableOpacity onPress={animationHandler}>
-          <View style={styles.roundButton} />
+        <TouchableOpacity onPress={timerLevelAnim}>
+          <View style={styles.startButton} />
         </TouchableOpacity>
       </Animated.View>
 
@@ -322,16 +330,11 @@ const styles = StyleSheet.create({
     top: height - 90,
     left: 20,
   },
-  roundButton: {
+  startButton: {
     width: 80,
     height: 80,
     borderRadius: 80,
     backgroundColor: colors.button,
-  },
-  sink: {
-    height: height,
-    width: width,
-    backgroundColor: colors.sink,
   },
   sliderContainer: {
     position: 'absolute',
@@ -355,6 +358,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     opacity: 0.8,
     margin: 0,
+  },
+  timerLevel: {
+    height: 10,
+    width: width,
+    backgroundColor: colors.sink,
   },
   valuesContainer: {
     flex: 1,
