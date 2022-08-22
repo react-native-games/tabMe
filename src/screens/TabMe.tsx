@@ -20,9 +20,13 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
   TapGestureHandler,
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
+import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+
 import Slider from '@react-native-community/slider';
 
 import { RenderAnimation } from '../components';
@@ -41,6 +45,13 @@ const colors = {
   text: "#ffffff",
   target: '#ffff8a'
 };
+const MENU_SPRING_CONFIG = {
+  damping: 80,
+  overshootClamping: true,
+  restDisplacementThreshold: 0.1,
+  restSpeedThreshold: 0.1,
+  stiffness: 500
+}
 
 const handleRotation = (
   targetRotate: Animated.SharedValue<number>,
@@ -57,6 +68,7 @@ const handleRotation = (
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
@@ -68,6 +80,7 @@ const TabMe = () => {
   const targetTranslateX = useSharedValue<number>(0);
   const targetTranslateY = useSharedValue<number>(0);
   const showLottieAnim = useSharedValue<boolean>(false);
+  const menuTop = useSharedValue(height)
 
   const timerLevelAnimation = useSharedValue(height);
   const buttonAnimation = useSharedValue(0);
@@ -253,6 +266,38 @@ const TabMe = () => {
     setReset(true);
   }
 
+  const menuHandler = () => {
+    menuTop.value = withSpring(
+      height / 2,
+      MENU_SPRING_CONFIG
+    )
+  }
+
+  const menuGestureHandler = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, { startTop: number }>({
+    onStart(_, context) {
+      context.startTop = menuTop.value;
+    },
+    onActive(event, context) {
+      menuTop.value = context.startTop + event.translationY;
+    },
+    onEnd() {
+      if (menuTop.value > height / 2 + 200) {
+        menuTop.value = height
+      } else {
+        menuTop.value = height / 2
+      }
+    }
+  })
+
+  const menuAnimStyle = useAnimatedStyle(() => {
+
+
+    return {
+      /* Just use withSpring here, and you don't need to use it anywhere else! */
+      top: withSpring(menuTop.value, MENU_SPRING_CONFIG)
+    }
+  })
+
   return (
     <TouchableOpacity
       onPress={resetHandler}
@@ -318,12 +363,23 @@ const TabMe = () => {
           </View>
         </TouchableOpacity>
       </Animated.View>
-
+      <IoniconsIcon
+        name="menu"
+        size={30}
+        color={colors.button}
+        onPress={menuHandler}
+        style={styles.menuIcon}
+      />
       {start ?
         <View style={styles.pointsContainer}>
           <Text style={styles.points}>{points.toFixed(0)}</Text>
         </View> : null
       }
+      <PanGestureHandler onGestureEvent={menuGestureHandler} >
+        <Animated.View style={[styles.menu, menuAnimStyle]} >
+          <Text>Sheet</Text>
+        </Animated.View>
+      </PanGestureHandler>
     </TouchableOpacity>
   );
 };
@@ -350,6 +406,29 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: 'cyan',
   },
+  menuIcon: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+  },
+  menu: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -80,
+    // top: 0,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   points: {
     color: '#fff',
     fontSize: 30,
@@ -358,6 +437,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: height - 90,
     left: 20,
+  },
+  sliderContainer: {
+    position: 'absolute',
+    top: 50,
+    left: 10,
   },
   startButton: {
     width: TARGET_WIDTH,
@@ -370,11 +454,6 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 30,
     color: colors.buttonText
-  },
-  sliderContainer: {
-    position: 'absolute',
-    top: 50,
-    left: 10,
   },
   startBtnContainer: {
     position: 'absolute',
