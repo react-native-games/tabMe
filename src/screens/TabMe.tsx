@@ -34,6 +34,7 @@ import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
 import { useMoveTarget, useRotateTarget } from '../hooks';
+import useTimerLevel from '../hooks/useTimerLevel';
 
 
 
@@ -60,7 +61,7 @@ const TabMe = () => {
   const showLottieAnim = useSharedValue<boolean>(false);
   const menuTop = useSharedValue(height)
 
-  const timerLevelAnimation = useSharedValue(height);
+
   const buttonAnimation = useSharedValue(0);
 
 
@@ -69,23 +70,21 @@ const TabMe = () => {
     useMoveTarget(reset, setReset, start, speed)
 
   // ROTATE TARGET
-  const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } = useRotateTarget(targetTranslateX, targetTranslateY)
+  const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } =
+    useRotateTarget(targetTranslateX, targetTranslateY)
 
-  const timerLevelAnim =
-    () => {
-      buttonAnimation.value = withTiming(1, { duration: 300 });
-      setStart(true)
+  // TIMER LEVEL
+  const { timerLevelAnim, timerLevelAnimStyle } =
+    useTimerLevel(
+      buttonAnimation,
+      duration,
+      points,
+      setStart,
+      start,
+      targetTranslateX,
+      targetTranslateY,
+    )
 
-      timerLevelAnimation.value = withSequence(
-        withTiming(0, { duration: 300 }),
-        /* Why add +10: Because at the beginning the timerLevel is at the bottom,
-        and at the end we check again if it is at the bottom. 
-        So we add 10 and at the end we check if timerLevel is bigger than height.  */
-        withTiming(height + 10, {
-          duration: duration,
-        }),
-      )
-    }
 
   const getPoints = async () => {
     const p = await cache.get('points');
@@ -96,32 +95,9 @@ const TabMe = () => {
     getPoints()
   }, [])
 
-  const savePoints = async () => {
 
-    const savedPoints = await cache.get('points')
-    console.log('savePoints', savedPoints);
-    if (savedPoints) {
-      let pnts = savedPoints + points;
-      cache.set('points', pnts)
-    } else {
-      cache.set('points', points)
 
-    }
-  }
 
-  const timerLevelAnimStyle = useAnimatedStyle(() => {
-    /* Check if time is up */
-    if (start && Math.round(timerLevelAnimation.value) > height) {
-      buttonAnimation.value = withTiming(0, { duration: 300 })
-      runOnJS(setStart)(false);
-      runOnJS(savePoints)()
-      targetTranslateX.value = withSpring(0)
-      targetTranslateY.value = withSpring(0)
-
-    }
-
-    return { transform: [{ translateY: timerLevelAnimation.value }] };
-  });
 
   const startBtnStyle = useAnimatedStyle(() => {
     const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
