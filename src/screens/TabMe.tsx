@@ -33,20 +33,9 @@ import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../c
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
-import { useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
-
-
+import { useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 
 const { width, height } = Dimensions.get('window');
-
-
-const MENU_SPRING_CONFIG = {
-  damping: 80,
-  overshootClamping: true,
-  restDisplacementThreshold: 0.1,
-  restSpeedThreshold: 0.1,
-  stiffness: 500
-}
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
@@ -54,9 +43,6 @@ const TabMe = () => {
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
-
-
-  const menuTop = useSharedValue(height)
 
   // MOVE TARGET
   const { targetTranslateX, targetTranslateY } =
@@ -92,7 +78,10 @@ const TabMe = () => {
     targetTranslateX,
     targetTranslateY,
     timerLevelAnim,
-  )
+  );
+
+  const { menuHandler, menuGestureHandler, menuAnimStyle } =
+    useMenuSheet()
 
   const getPoints = async () => {
     const p = await cache.get('points');
@@ -105,36 +94,6 @@ const TabMe = () => {
   const resetHandler = () => {
     setReset(true);
   }
-
-  const menuHandler = () => {
-    menuTop.value = withSpring(
-      height / 2,
-      MENU_SPRING_CONFIG
-    )
-  }
-
-  const menuGestureHandler = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, { startTop: number }>({
-    onStart(_, context) {
-      context.startTop = menuTop.value;
-    },
-    onActive(event, context) {
-      menuTop.value = context.startTop + event.translationY;
-    },
-    onEnd() {
-      if (menuTop.value > height / 2 + 200) {
-        menuTop.value = height
-      } else {
-        menuTop.value = height / 2
-      }
-    }
-  })
-
-  const menuAnimStyle = useAnimatedStyle(() => {
-    return {
-      /* Just use withSpring here, and you don't need to use it anywhere else! */
-      top: withSpring(menuTop.value, MENU_SPRING_CONFIG)
-    }
-  })
 
   return (
     <TouchableOpacity
