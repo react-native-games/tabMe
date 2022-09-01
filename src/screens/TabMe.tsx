@@ -33,7 +33,7 @@ import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../c
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
-import { useMoveTarget, useRotateTarget, useStartButton, useTimerLevel } from '../hooks';
+import { useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 
 
 
@@ -55,7 +55,7 @@ const TabMe = () => {
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
 
-  const showLottieAnim = useSharedValue<boolean>(false);
+
   const menuTop = useSharedValue(height)
 
   // MOVE TARGET
@@ -79,7 +79,20 @@ const TabMe = () => {
       start,
       targetTranslateX,
       targetTranslateY,
-    )
+    );
+
+  // TAP TARGET
+  const { tapPanGestureEvent, showLottieAnim } = useTapTarget(
+    duration,
+    points,
+    setDuration,
+    setPoints,
+    speed,
+    start,
+    targetTranslateX,
+    targetTranslateY,
+    timerLevelAnim,
+  )
 
   const getPoints = async () => {
     const p = await cache.get('points');
@@ -88,34 +101,6 @@ const TabMe = () => {
   useEffect(() => {
     getPoints()
   }, [])
-
-
-
-  const tapPanGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
-    onStart: (e, ctx) => {
-      console.log('tab');
-      if (start) {
-
-        // runOnJS(setReset)(true);
-        runOnJS(setPoints)(points + 3000 - Number(speed));
-        runOnJS(setDuration)(duration + 100);
-        runOnJS(timerLevelAnim)()
-        showLottieAnim.value = true
-        targetTranslateX.value = withSpring(Math.random() * width * 2);
-        targetTranslateY.value = withSpring(Math.random() * width * 2);
-
-      }
-    },
-    onActive: (e, ctx) => {
-      console.log('tab2');
-
-    },
-    onEnd: (e) => {
-      showLottieAnim.value = false
-    },
-  });
-
-
 
   const resetHandler = () => {
     setReset(true);
