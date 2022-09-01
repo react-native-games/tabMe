@@ -33,6 +33,7 @@ import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../c
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
+import { useRotateTarget } from '../hooks';
 
 
 
@@ -47,17 +48,7 @@ const MENU_SPRING_CONFIG = {
   stiffness: 500
 }
 
-const handleRotation = (
-  targetRotate: Animated.SharedValue<number>,
-  target2: boolean,
-) => {
-  'worklet';
-  if (target2) {
-    return `${targetRotate.value * 2 * Math.PI + 45}rad`;
-  } else {
-    return `${targetRotate.value * 2 * Math.PI}rad`;
-  }
-};
+
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
@@ -67,17 +58,19 @@ const TabMe = () => {
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
 
-  const targetRotate = useSharedValue<number>(0);
-  const targetRotate2 = useSharedValue<number>(0);
-  const targetScale = useSharedValue<number>(0);
-  const targetOpacity = useSharedValue<number>(0);
   const targetTranslateX = useSharedValue<number>(0);
   const targetTranslateY = useSharedValue<number>(0);
+
+
+
   const showLottieAnim = useSharedValue<boolean>(false);
   const menuTop = useSharedValue(height)
 
   const timerLevelAnimation = useSharedValue(height);
   const buttonAnimation = useSharedValue(0);
+
+
+  const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } = useRotateTarget(targetTranslateX, targetTranslateY)
 
   const timerLevelAnim =
     () => {
@@ -138,31 +131,6 @@ const TabMe = () => {
   });
 
 
-  // Target rotating
-  useEffect(() => {
-    targetScale.value = withRepeat(withTiming(8, { duration: 1000 }), -1, true);
-    targetOpacity.value = withRepeat(
-      withTiming(0.8, { duration: 2000 }),
-      -1,
-      true,
-    );
-
-    targetRotate.value = withRepeat(
-      withTiming(0.5, {
-        duration: 2000,
-        easing: Easing.out(Easing.cubic),
-      }),
-      -1,
-    );
-
-    targetRotate2.value = withRepeat(
-      withTiming(-1, {
-        duration: 2000,
-        easing: Easing.out(Easing.cubic),
-      }),
-      -1,
-    );
-  }, []);
 
   const randomNum = () => {
     const nums = [-1, 1, -1, 1, -1, 1]
@@ -231,30 +199,7 @@ const TabMe = () => {
     },
   });
 
-  const targetAnimStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: targetTranslateX.value },
-        { translateY: targetTranslateY.value },
-        { rotate: handleRotation(targetRotate, false) },
-      ],
-    };
-  });
 
-  const targetAnimStyle2 = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { rotate: handleRotation(targetRotate2, true) },
-      ],
-    };
-  });
-
-  const innerColorAnimStyle = useAnimatedStyle(() => {
-    return {
-      opacity: targetOpacity.value,
-      transform: [{ scale: targetScale.value }],
-    };
-  });
 
   const resetHandler = () => {
     setReset(true);
