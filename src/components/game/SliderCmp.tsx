@@ -1,8 +1,8 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { Dispatch, FC, SetStateAction } from 'react'
 import Slider from '@react-native-community/slider'
-import colors from '../constants/colors';
-import { width } from '../constants/styleConst'
+import { width } from '../../constants/styleConst'
+import colors from '../../constants/colors'
 
 interface Props {
   setSpeed: Dispatch<SetStateAction<number>>

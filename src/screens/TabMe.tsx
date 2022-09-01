@@ -29,7 +29,7 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import Slider from '@react-native-community/slider';
 
-import { RenderAnimation, SliderCmp, StartButton, Target } from '../components';
+import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
@@ -284,8 +284,6 @@ const TabMe = () => {
   })
 
   const menuAnimStyle = useAnimatedStyle(() => {
-
-
     return {
       /* Just use withSpring here, and you don't need to use it anywhere else! */
       top: withSpring(menuTop.value, MENU_SPRING_CONFIG)
@@ -326,11 +324,10 @@ const TabMe = () => {
           <Text style={styles.points}>{points.toFixed(0)}</Text>
         </View> : null
       }
-      <PanGestureHandler onGestureEvent={menuGestureHandler} >
-        <Animated.View style={[styles.menu, menuAnimStyle]} >
-          <Text>Sheet</Text>
-        </Animated.View>
-      </PanGestureHandler>
+      <MenuSheet
+        menuGestureHandler={menuGestureHandler}
+        menuAnimStyle={menuAnimStyle}
+      />
     </TouchableOpacity>
   );
 };
@@ -348,24 +345,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-  },
-  menu: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: -80,
-    // top: 0,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   points: {
     color: '#fff',

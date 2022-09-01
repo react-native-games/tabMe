@@ -1,13 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { Dispatch, FC, SetStateAction } from 'react'
-import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
-import Animated, { runOnJS, useAnimatedGestureHandler } from 'react-native-reanimated'
+import { StyleSheet } from 'react-native'
+import React, { FC, } from 'react'
+import { TapGestureHandler, } from 'react-native-gesture-handler'
+import Animated from 'react-native-reanimated'
+import RenderAnimation from '../animations/RenderAnimation';
+import { targetWidth } from '../../constants/styleConst';
+import colors from '../../constants/colors';
 
-import * as styleConst from '../constants/styleConst';
-import RenderAnimation from './animations/RenderAnimation';
-import colors from '../constants/colors';
-
-const explodingCircles = require('../assets/animations/exploding-circles.json');
+const explodingCircles = require('../../assets/animations/exploding-circles.json');
 
 interface Props {
   start: boolean,
@@ -18,8 +17,6 @@ interface Props {
   showLottieAnim: any
 }
 const Target: FC<Props> = ({ start, tapPanGestureEvent, targetAnimStyle, targetAnimStyle2, innerColorAnimStyle, showLottieAnim }) => {
-
-
 
   return (
     <TapGestureHandler onGestureEvent={tapPanGestureEvent}
@@ -53,8 +50,8 @@ export default Target
 
 const styles = StyleSheet.create({
   target: {
-    width: styleConst.targetWidth,
-    height: styleConst.targetWidth,
+    width: targetWidth,
+    height: targetWidth,
     alignSelf: 'center',
     backgroundColor: colors.target,
     borderRadius: 20,

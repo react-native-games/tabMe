@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { FC } from 'react'
 import Animated from 'react-native-reanimated'
-import { height, targetWidth, width } from '../constants/styleConst'
-import colors from '../constants/colors'
+import { height, targetWidth, width } from '../../constants/styleConst'
+import colors from '../../constants/colors'
 
 interface Props {
   startBtnStyle: any,
