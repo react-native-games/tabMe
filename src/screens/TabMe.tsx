@@ -29,7 +29,7 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import Slider from '@react-native-community/slider';
 
-import { RenderAnimation, SliderCmp, Target } from '../components';
+import { RenderAnimation, SliderCmp, StartButton, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
@@ -167,7 +167,7 @@ const TabMe = () => {
   const randomNum = () => {
     const nums = [-1, 1, -1, 1, -1, 1]
     const n = nums[Math.floor(Math.random() * nums.length)]
-    return Math.random() * n * width - styleConst.TARGET_WIDTH
+    return Math.random() * n * width - styleConst.targetWidth
   }
 
   const moveXAround = () => {
@@ -310,19 +310,10 @@ const TabMe = () => {
         innerColorAnimStyle={innerColorAnimStyle}
         showLottieAnim={showLottieAnim}
       />
-
-
-      <Animated.View
-        style={[
-          styles.startBtnContainer,
-          startBtnStyle,
-        ]}>
-        <TouchableOpacity onPress={timerLevelAnim}>
-          <View style={styles.startButton} >
-            <Text style={styles.startButtonText} >Start</Text>
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
+      <StartButton
+        startBtnStyle={startBtnStyle}
+        timerLevelAnim={timerLevelAnim}
+      />
       <IoniconsIcon
         name="menu"
         size={30}
@@ -353,7 +344,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#474e7f',
   },
-
   menuIcon: {
     position: 'absolute',
     bottom: 20,
@@ -386,30 +376,9 @@ const styles = StyleSheet.create({
     top: height - 90,
     left: 20,
   },
-
-  startButton: {
-    width: styleConst.TARGET_WIDTH,
-    height: styleConst.TARGET_WIDTH,
-    borderRadius: styleConst.TARGET_WIDTH,
-    backgroundColor: colors.button,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  startButtonText: {
-    fontSize: 30,
-    color: colors.buttonText
-  },
-  startBtnContainer: {
-    position: 'absolute',
-    top: height - 150,
-    left: width / 2 - (styleConst.TARGET_WIDTH / 2),
-  },
-
   timerLevel: {
     height: 10,
     width: width,
     backgroundColor: colors.sink,
   },
-
-
 });

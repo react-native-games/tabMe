@@ -53,8 +53,8 @@ export default Target
 
 const styles = StyleSheet.create({
   target: {
-    width: styleConst.TARGET_WIDTH,
-    height: styleConst.TARGET_WIDTH,
+    width: styleConst.targetWidth,
+    height: styleConst.targetWidth,
     alignSelf: 'center',
     backgroundColor: colors.target,
     borderRadius: 20,
