@@ -29,22 +29,15 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import Slider from '@react-native-community/slider';
 
-import { RenderAnimation } from '../components';
+import { RenderAnimation, SliderCmp } from '../components';
 import { cache } from '../utils';
+import colors from '../constants/colors';
 
 const explodingCircles = require('../assets/animations/exploding-circles.json');
 
 const { width, height } = Dimensions.get('window');
 const TARGET_WIDTH = 88;
-const colors = {
-  black: "#323F4E",
-  button: "#F76A6A",
-  buttonText: '#f6f3be',
-  darkBlue: "#192153",
-  sink: "#f9f10e",
-  text: "#ffffff",
-  target: '#ffff8a'
-};
+
 const MENU_SPRING_CONFIG = {
   damping: 80,
   overshootClamping: true,
@@ -93,7 +86,7 @@ const TabMe = () => {
       timerLevelAnimation.value = withSequence(
         withTiming(0, { duration: 300 }),
         /* Why add +10: Because at the beginning the timerLevel is at the bottom,
-        and at the end we check again if is is at the bottom. 
+        and at the end we check again if it is at the bottom. 
         So we add 10 and at the end we check if timerLevel is bigger than height.  */
         withTiming(height + 10, {
           duration: duration,
@@ -304,25 +297,9 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
-      <View style={styles.sliderContainer}>
-        <View style={styles.valuesContainer}>
-          <Text style={styles.values}>500</Text>
-          <Text style={[styles.values, { marginLeft: 10 }]}>1500</Text>
-          <Text style={styles.values}>2500</Text>
-        </View>
-        <Slider
-          style={{ width: width - 20, height: 40 }}
-          value={1500}
-          inverted
-          tapToSeek
-          minimumValue={500}
-          maximumValue={2500}
-          minimumTrackTintColor="red"
-          maximumTrackTintColor="cyan"
-          onSlidingComplete={value => setSpeed(value)}
-          disabled={start}
-        />
-      </View>
+
+      <SliderCmp start={start} setSpeed={setSpeed} />
+
       <Animated.View
         style={[styles.timerLevel, timerLevelAnimStyle]}
       />
@@ -438,11 +415,7 @@ const styles = StyleSheet.create({
     top: height - 90,
     left: 20,
   },
-  sliderContainer: {
-    position: 'absolute',
-    top: 50,
-    left: 10,
-  },
+
   startButton: {
     width: TARGET_WIDTH,
     height: TARGET_WIDTH,
@@ -478,15 +451,6 @@ const styles = StyleSheet.create({
     width: width,
     backgroundColor: colors.sink,
   },
-  valuesContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  values: {
-    fontSize: 20,
-    color: colors.buttonText,
-    fontWeight: '800'
-  },
+
+
 });
