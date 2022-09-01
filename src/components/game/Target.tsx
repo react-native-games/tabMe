@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native'
 import React, { FC, } from 'react'
 import { TapGestureHandler, } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
+
 import RenderAnimation from '../animations/RenderAnimation';
 import { targetWidth } from '../../constants/styleConst';
 import colors from '../../constants/colors';
 
 const explodingCircles = require('../../assets/animations/exploding-circles.json');
-
 interface Props {
   start: boolean,
   tapPanGestureEvent: any,

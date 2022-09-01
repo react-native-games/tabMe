@@ -7,32 +7,12 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import Animated, {
-  Easing,
-  interpolate,
-  runOnJS,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  TapGestureHandler,
-  TapGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
-import Slider from '@react-native-community/slider';
-
-import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../components';
+import { MenuSheet, SliderCmp, StartButton, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
-import * as styleConst from '../constants/styleConst';
 import { useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 
 const { width, height } = Dimensions.get('window');
@@ -80,6 +60,7 @@ const TabMe = () => {
     timerLevelAnim,
   );
 
+  // MENU SHEET
   const { menuHandler, menuGestureHandler, menuAnimStyle } =
     useMenuSheet()
 

@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { Dispatch, SetStateAction } from 'react';
 import {
   runOnJS,
@@ -47,5 +46,3 @@ const useTapTarget = (
 };
 
 export default useTapTarget;
-
-const styles = StyleSheet.create({});

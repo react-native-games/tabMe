@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import {
   useSharedValue,
@@ -64,5 +63,3 @@ const useMoveTarget = (
 };
 
 export default useMoveTarget;
-
-const styles = StyleSheet.create({});

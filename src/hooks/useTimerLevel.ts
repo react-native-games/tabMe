@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { Dispatch, SetStateAction } from 'react';
 import {
   runOnJS,
@@ -65,5 +64,3 @@ const useTimerLevel = (
 };
 
 export default useTimerLevel;
-
-const styles = StyleSheet.create({});

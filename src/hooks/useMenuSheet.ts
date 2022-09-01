@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import {
   useAnimatedGestureHandler,
@@ -53,5 +52,3 @@ const useMenuSheet = () => {
 };
 
 export default useMenuSheet;
-
-const styles = StyleSheet.create({});

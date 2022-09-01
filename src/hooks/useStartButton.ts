@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import {
   interpolate,
@@ -19,5 +18,3 @@ const useStartButton = () => {
 };
 
 export default useStartButton;
-
-const styles = StyleSheet.create({});

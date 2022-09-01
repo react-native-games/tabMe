@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React, { Dispatch, FC, SetStateAction } from 'react'
 import Slider from '@react-native-community/slider'
 import { width } from '../../constants/styleConst'

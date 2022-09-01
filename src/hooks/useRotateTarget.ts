@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import React, { useEffect } from 'react';
 import Animated, {
   Easing,
@@ -79,5 +78,3 @@ const useRotateTarget = (targetTranslateX: any, targetTranslateY: any) => {
 };
 
 export default useRotateTarget;
-
-const styles = StyleSheet.create({});
