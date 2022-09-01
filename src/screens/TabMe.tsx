@@ -33,8 +33,7 @@ import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../c
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
-import { useMoveTarget, useRotateTarget } from '../hooks';
-import useTimerLevel from '../hooks/useTimerLevel';
+import { useMoveTarget, useRotateTarget, useStartButton, useTimerLevel } from '../hooks';
 
 
 
@@ -49,8 +48,6 @@ const MENU_SPRING_CONFIG = {
   stiffness: 500
 }
 
-
-
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
@@ -61,17 +58,16 @@ const TabMe = () => {
   const showLottieAnim = useSharedValue<boolean>(false);
   const menuTop = useSharedValue(height)
 
-
-  const buttonAnimation = useSharedValue(0);
-
-
   // MOVE TARGET
   const { targetTranslateX, targetTranslateY } =
     useMoveTarget(reset, setReset, start, speed)
 
   // ROTATE TARGET
   const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } =
-    useRotateTarget(targetTranslateX, targetTranslateY)
+    useRotateTarget(targetTranslateX, targetTranslateY);
+
+  // START BUTTON
+  const { buttonAnimation, startBtnStyle } = useStartButton()
 
   // TIMER LEVEL
   const { timerLevelAnim, timerLevelAnimStyle } =
@@ -85,31 +81,13 @@ const TabMe = () => {
       targetTranslateY,
     )
 
-
   const getPoints = async () => {
     const p = await cache.get('points');
     console.log('points', p);
   }
-
   useEffect(() => {
     getPoints()
   }, [])
-
-
-
-
-
-  const startBtnStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
-    const translateY = interpolate(buttonAnimation.value, [0, 1], [0, 200]);
-    return { opacity, transform: [{ translateY }] };
-  });
-
-
-
-
-
-
 
 
 
