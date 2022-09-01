@@ -29,14 +29,15 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import Slider from '@react-native-community/slider';
 
-import { RenderAnimation, SliderCmp } from '../components';
+import { RenderAnimation, SliderCmp, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
+import * as styleConst from '../constants/styleConst';
 
-const explodingCircles = require('../assets/animations/exploding-circles.json');
+
 
 const { width, height } = Dimensions.get('window');
-const TARGET_WIDTH = 88;
+
 
 const MENU_SPRING_CONFIG = {
   damping: 80,
@@ -166,7 +167,7 @@ const TabMe = () => {
   const randomNum = () => {
     const nums = [-1, 1, -1, 1, -1, 1]
     const n = nums[Math.floor(Math.random() * nums.length)]
-    return Math.random() * n * width - TARGET_WIDTH
+    return Math.random() * n * width - styleConst.TARGET_WIDTH
   }
 
   const moveXAround = () => {
@@ -297,38 +298,20 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
-
       <SliderCmp start={start} setSpeed={setSpeed} />
-
       <Animated.View
         style={[styles.timerLevel, timerLevelAnimStyle]}
       />
+      <Target
+        start={start}
+        tapPanGestureEvent={tapPanGestureEvent}
+        targetAnimStyle={targetAnimStyle}
+        targetAnimStyle2={targetAnimStyle2}
+        innerColorAnimStyle={innerColorAnimStyle}
+        showLottieAnim={showLottieAnim}
+      />
 
 
-      <TapGestureHandler onGestureEvent={tapPanGestureEvent}
-        maxDurationMs={200}
-        maxDelayMs={200}
-        maxDeltaX={4}
-        maxDeltaY={4}
-        enabled={start}
-      >
-        <Animated.View
-          style={[styles.target, targetAnimStyle]}>
-          <Animated.View style={[styles.target, styles.innertarget, targetAnimStyle2]} />
-          <Animated.View
-            style={[styles.innerColor, innerColorAnimStyle]}
-          />
-          {showLottieAnim.value ?
-            <RenderAnimation
-              source={explodingCircles}
-              style={{ transform: [{ scale: 3 }] }}
-              soundName='laser.wav'
-              soundDelay={1}
-            />
-            : null
-          }
-        </Animated.View>
-      </TapGestureHandler>
       <Animated.View
         style={[
           styles.startBtnContainer,
@@ -370,19 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#474e7f',
   },
-  innertarget: {
-    opacity: 0.8,
-    position: 'absolute',
-    transform: [{ scale: 0.5 }],
-  },
-  innerColor: {
-    width: 10,
-    height: 10,
-    backgroundColor: 'cyan',
-    borderRadius: 5,
-    borderWidth: 7,
-    borderColor: 'cyan',
-  },
+
   menuIcon: {
     position: 'absolute',
     bottom: 20,
@@ -417,9 +388,9 @@ const styles = StyleSheet.create({
   },
 
   startButton: {
-    width: TARGET_WIDTH,
-    height: TARGET_WIDTH,
-    borderRadius: TARGET_WIDTH,
+    width: styleConst.TARGET_WIDTH,
+    height: styleConst.TARGET_WIDTH,
+    borderRadius: styleConst.TARGET_WIDTH,
     backgroundColor: colors.button,
     alignItems: 'center',
     justifyContent: 'center'
@@ -431,21 +402,9 @@ const styles = StyleSheet.create({
   startBtnContainer: {
     position: 'absolute',
     top: height - 150,
-    left: width / 2 - (TARGET_WIDTH / 2),
+    left: width / 2 - (styleConst.TARGET_WIDTH / 2),
   },
-  target: {
-    width: TARGET_WIDTH,
-    height: TARGET_WIDTH,
-    alignSelf: 'center',
-    backgroundColor: colors.target,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: 'cyan',
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.8,
-    margin: 0,
-  },
+
   timerLevel: {
     height: 10,
     width: width,
