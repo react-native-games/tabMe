@@ -33,7 +33,7 @@ import { MenuSheet, RenderAnimation, SliderCmp, StartButton, Target } from '../c
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import * as styleConst from '../constants/styleConst';
-import { useRotateTarget } from '../hooks';
+import { useMoveTarget, useRotateTarget } from '../hooks';
 
 
 
@@ -53,15 +53,9 @@ const MENU_SPRING_CONFIG = {
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
-  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
-
-  const targetTranslateX = useSharedValue<number>(0);
-  const targetTranslateY = useSharedValue<number>(0);
-
-
 
   const showLottieAnim = useSharedValue<boolean>(false);
   const menuTop = useSharedValue(height)
@@ -70,6 +64,11 @@ const TabMe = () => {
   const buttonAnimation = useSharedValue(0);
 
 
+  // MOVE TARGET
+  const { targetTranslateX, targetTranslateY } =
+    useMoveTarget(reset, setReset, start, speed)
+
+  // ROTATE TARGET
   const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } = useRotateTarget(targetTranslateX, targetTranslateY)
 
   const timerLevelAnim =
@@ -132,48 +131,11 @@ const TabMe = () => {
 
 
 
-  const randomNum = () => {
-    const nums = [-1, 1, -1, 1, -1, 1]
-    const n = nums[Math.floor(Math.random() * nums.length)]
-    return Math.random() * n * width - styleConst.targetWidth
-  }
 
-  const moveXAround = () => {
-    targetTranslateX.value = withRepeat(
-      withSequence(
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-      ),
-      -1,
-      true,
-    );
-  };
 
-  const moveYAround = () => {
-    targetTranslateY.value = withRepeat(
-      withSequence(
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-      ),
-      -1,
-      true,
-    );
-  };
 
-  // Target moving around
-  useEffect(() => {
-    if (reset)
-      setTimeout(() => {
-        setReset(false);
-      }, 400);
 
-    if (start) {
-      moveXAround();
-      moveYAround();
-    }
-  }, [reset, start]);
+
 
   const tapPanGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart: (e, ctx) => {
