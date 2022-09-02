@@ -6,7 +6,9 @@ const colors = {
   sink: '#f9f10e',
   text: '#ffffff',
   target: '#ffff8a',
+  fakeTarget: '#ff3232',
   targetInner: 'cyan',
+  fakeTargetInner: '#fff832',
   background: '#474e7f',
   menu: '#36e5bf',
 };

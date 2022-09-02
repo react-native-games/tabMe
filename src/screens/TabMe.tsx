@@ -9,10 +9,11 @@ import React, { useEffect, useState } from 'react';
 import Animated from 'react-native-reanimated';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
-import { MenuSheet, SliderCmp, StartButton, Target } from '../components';
+import { FakeTarget, MenuSheet, SliderCmp, StartButton, Target } from '../components';
 import colors from '../constants/colors';
-import { useGetPoints, useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
+import { useFakeTapTarget, useGetPoints, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
+import useMoveFakeTarget from '../hooks/useMoveFakeTarget';
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
@@ -28,6 +29,14 @@ const TabMe = () => {
   // ROTATE TARGET
   const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } =
     useRotateTarget(targetTranslateX, targetTranslateY);
+
+  // MOVE FAKE TARGET
+  const { fakeTargetTranslateX, fakeTargetTranslateY } =
+    useMoveFakeTarget(reset, setReset, start, speed, setSpeed)
+
+  // ROTATE FAKE TARGET
+  const { fakeTargetAnimStyle, fakeTargetAnimStyle2, innerColorFakeAnimStyle } =
+    useRotateFakeTarget(fakeTargetTranslateX, fakeTargetTranslateY);
 
   // START BUTTON
   const { buttonAnimation, startBtnStyle, sliderStyle } = useStartButton()
@@ -45,7 +54,7 @@ const TabMe = () => {
     );
 
   // TAP TARGET
-  const { tapPanGestureEvent, showLottieAnim } = useTapTarget(
+  const { tapTargetPanGestureEvent, showTargetLottieAnim } = useTapTarget(
     duration,
     points,
     setDuration,
@@ -54,6 +63,19 @@ const TabMe = () => {
     start,
     targetTranslateX,
     targetTranslateY,
+    timerLevelAnim,
+  );
+
+  // TAP FAKE TARGET
+  const { tapFakeTargetPanGestureEvent, showFakeTargetLottieAnim } = useFakeTapTarget(
+    duration,
+    points,
+    setDuration,
+    setPoints,
+    speed,
+    start,
+    fakeTargetTranslateX,
+    fakeTargetTranslateY,
     timerLevelAnim,
   );
 
@@ -81,12 +103,21 @@ const TabMe = () => {
       />
       <Target
         start={start}
-        tapPanGestureEvent={tapPanGestureEvent}
+        tapTargetPanGestureEvent={tapTargetPanGestureEvent}
         targetAnimStyle={targetAnimStyle}
         targetAnimStyle2={targetAnimStyle2}
         innerColorAnimStyle={innerColorAnimStyle}
-        showLottieAnim={showLottieAnim}
+        showTargetLottieAnim={showTargetLottieAnim}
       />
+      {start ?
+        <FakeTarget
+          start={start}
+          tapPanGestureEvent={tapFakeTargetPanGestureEvent}
+          targetAnimStyle={fakeTargetAnimStyle}
+          targetAnimStyle2={fakeTargetAnimStyle2}
+          innerColorAnimStyle={innerColorFakeAnimStyle}
+          showFakeTargetLottieAnim={showFakeTargetLottieAnim}
+        /> : null}
       <StartButton
         startBtnStyle={startBtnStyle}
         timerLevelAnim={timerLevelAnim}

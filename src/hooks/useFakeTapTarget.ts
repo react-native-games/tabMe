@@ -8,41 +8,41 @@ import {
 import { TapGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 import { width } from '../constants/styleConst';
 
-const useTapTarget = (
+const useFakeTapTarget = (
   duration: number,
   points: number,
   setDuration: Dispatch<SetStateAction<number>>,
   setPoints: Dispatch<SetStateAction<number>>,
   speed: number,
   start: boolean,
-  targetTranslateX: any,
-  targetTranslateY: any,
+  fakeTargetTranslateX: any,
+  fakeTargetTranslateY: any,
   timerLevelAnim: any,
 ) => {
-  const showTargetLottieAnim = useSharedValue<boolean>(false);
-  const tapTargetPanGestureEvent =
+  const showFakeTargetLottieAnim = useSharedValue<boolean>(false);
+  const tapFakeTargetPanGestureEvent =
     useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
       onStart: (e, ctx) => {
-        console.log('tab');
+        console.log('fake tab');
         if (start) {
           // runOnJS(setReset)(true);
-          runOnJS(setPoints)(points + 3000 - Number(speed));
-          runOnJS(setDuration)(duration + 100);
+          runOnJS(setPoints)(points - 1000);
+          runOnJS(setDuration)(duration - 100);
           runOnJS(timerLevelAnim)();
-          showTargetLottieAnim.value = true;
-          targetTranslateX.value = withSpring(Math.random() * width * 2);
-          targetTranslateY.value = withSpring(Math.random() * width * 2);
+          showFakeTargetLottieAnim.value = true;
+          fakeTargetTranslateX.value = withSpring(Math.random() * width * 2);
+          fakeTargetTranslateY.value = withSpring(Math.random() * width * 2);
         }
       },
       onActive: (e, ctx) => {
-        console.log('tab2');
+        console.log('fake tab2');
       },
       onEnd: (e) => {
-        showTargetLottieAnim.value = false;
+        showFakeTargetLottieAnim.value = false;
       },
     });
 
-  return { tapTargetPanGestureEvent, showTargetLottieAnim };
+  return { tapFakeTargetPanGestureEvent, showFakeTargetLottieAnim };
 };
 
-export default useTapTarget;
+export default useFakeTapTarget;

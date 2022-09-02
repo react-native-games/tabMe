@@ -7,19 +7,19 @@ import RenderAnimation from '../animations/RenderAnimation';
 import { targetWidth } from '../../constants/styleConst';
 import colors from '../../constants/colors';
 
-const explodingCircles = require('../../assets/animations/exploding-circles.json');
+const springles = require('../../assets/animations/springles.json');
 interface Props {
   start: boolean,
-  tapTargetPanGestureEvent: any,
+  tapPanGestureEvent: any,
   targetAnimStyle: any,
   targetAnimStyle2: any,
   innerColorAnimStyle: any,
-  showTargetLottieAnim: any
+  showFakeTargetLottieAnim: any
 }
-const Target: FC<Props> = ({ start, tapTargetPanGestureEvent, targetAnimStyle, targetAnimStyle2, innerColorAnimStyle, showTargetLottieAnim }) => {
+const FakeTarget: FC<Props> = ({ start, tapPanGestureEvent, targetAnimStyle, targetAnimStyle2, innerColorAnimStyle, showFakeTargetLottieAnim }) => {
 
   return (
-    <TapGestureHandler onGestureEvent={tapTargetPanGestureEvent}
+    <TapGestureHandler onGestureEvent={tapPanGestureEvent}
       maxDurationMs={200}
       maxDelayMs={200}
       maxDeltaX={4}
@@ -32,11 +32,11 @@ const Target: FC<Props> = ({ start, tapTargetPanGestureEvent, targetAnimStyle, t
         <Animated.View
           style={[styles.innerColor, innerColorAnimStyle]}
         />
-        {showTargetLottieAnim.value ?
+        {showFakeTargetLottieAnim.value ?
           <RenderAnimation
-            source={explodingCircles}
+            source={springles}
             style={{ transform: [{ scale: 3 }] }}
-            soundName='laser.wav'
+            soundName='boin.wav'
             soundDelay={1}
           />
           : null
@@ -46,21 +46,22 @@ const Target: FC<Props> = ({ start, tapTargetPanGestureEvent, targetAnimStyle, t
   )
 }
 
-export default Target
+export default FakeTarget;
 
 const styles = StyleSheet.create({
   target: {
-    width: targetWidth,
-    height: targetWidth,
+    width: targetWidth * 2,
+    height: targetWidth * 2,
     alignSelf: 'center',
-    backgroundColor: colors.target,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: colors.targetInner,
+    backgroundColor: colors.fakeTarget,
+    borderWidth: 7,
+    borderColor: colors.fakeTargetInner,
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 0.8,
     margin: 0,
+    borderTopLeftRadius: 200,
+    borderBottomRightRadius: 200,
   },
   innertarget: {
     opacity: 0.8,
@@ -68,11 +69,13 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.5 }],
   },
   innerColor: {
-    width: 10,
-    height: 10,
-    backgroundColor: colors.targetInner,
-    borderRadius: 5,
-    borderWidth: 7,
-    borderColor: colors.targetInner,
+    width: 20,
+    height: 20,
+    backgroundColor: colors.fakeTargetInner,
+    borderRadius: 10,
+    borderWidth: 14,
+    borderTopLeftRadius: 200,
+    borderBottomRightRadius: 200,
+    borderColor: colors.fakeTargetInner,
   },
 })
