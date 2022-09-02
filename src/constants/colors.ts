@@ -6,6 +6,9 @@ const colors = {
   sink: '#f9f10e',
   text: '#ffffff',
   target: '#ffff8a',
+  targetInner: 'cyan',
+  background: '#474e7f',
+  menu: '#36e5bf',
 };
 
 export default colors;

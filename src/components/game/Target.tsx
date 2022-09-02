@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.target,
     borderRadius: 20,
     borderWidth: 3,
-    borderColor: 'cyan',
+    borderColor: colors.targetInner,
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 0.8,
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
   innerColor: {
     width: 10,
     height: 10,
-    backgroundColor: 'cyan',
+    backgroundColor: colors.targetInner,
     borderRadius: 5,
     borderWidth: 7,
-    borderColor: 'cyan',
+    borderColor: colors.targetInner,
   },
 })

@@ -2,6 +2,7 @@ import { StyleSheet, Text } from 'react-native'
 import React, { FC } from 'react'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
+import colors from '../../constants/colors'
 
 interface Props { menuGestureHandler: any, menuAnimStyle: any }
 const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle }) => {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: -80,
-    backgroundColor: 'white',
+    backgroundColor: colors.menu,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',

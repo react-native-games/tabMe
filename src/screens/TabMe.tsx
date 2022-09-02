@@ -65,10 +65,11 @@ const TabMe = () => {
   const getPoints = async () => {
     const p = await cache.get('points');
     console.log('points', p);
+    setPoints(p)
   }
   useEffect(() => {
     getPoints()
-  }, [])
+  }, [start])
 
   const resetHandler = () => {
     setReset(true);
@@ -97,22 +98,25 @@ const TabMe = () => {
         startBtnStyle={startBtnStyle}
         timerLevelAnim={timerLevelAnim}
       />
-      <IoniconsIcon
-        name="menu"
-        size={30}
-        color={colors.button}
-        onPress={menuHandler}
-        style={styles.menuIcon}
-      />
-      {start ?
-        <View style={styles.pointsContainer}>
-          <Text style={styles.points}>{points.toFixed(0)}</Text>
-        </View> : null
-      }
+
       <MenuSheet
         menuGestureHandler={menuGestureHandler}
         menuAnimStyle={menuAnimStyle}
       />
+
+
+      {start ?
+        <View style={styles.pointsContainer}>
+          <Text style={styles.points}>{points.toFixed(0)}</Text>
+        </View> : <IoniconsIcon
+          name="menu"
+          size={30}
+          color={colors.menu}
+          onPress={menuHandler}
+          style={styles.menuIcon}
+        />
+      }
+
     </TouchableOpacity>
   );
 };
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: 'space-between',
     justifyContent: 'center',
-    backgroundColor: '#474e7f',
+    backgroundColor: colors.background,
   },
   menuIcon: {
     position: 'absolute',
