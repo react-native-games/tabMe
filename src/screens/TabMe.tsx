@@ -12,7 +12,7 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import { MenuSheet, SliderCmp, StartButton, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
-import { useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
+import { useGetPoints, useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
 
 const TabMe = () => {
@@ -62,14 +62,8 @@ const TabMe = () => {
   const { menuHandler, menuGestureHandler, menuAnimStyle } =
     useMenuSheet()
 
-  const getPoints = async () => {
-    const p = await cache.get('points');
-    console.log('points', p);
-    setPoints(p)
-  }
-  useEffect(() => {
-    getPoints()
-  }, [start])
+  // GET POINTS FROM ASYNCSTORAGE
+  useGetPoints(setPoints, start);
 
   const resetHandler = () => {
     setReset(true);
