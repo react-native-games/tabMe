@@ -3,14 +3,16 @@ import React, { Dispatch, FC, SetStateAction } from 'react'
 import Slider from '@react-native-community/slider'
 import { width } from '../../constants/styleConst'
 import colors from '../../constants/colors'
+import Animated from 'react-native-reanimated'
 
 interface Props {
   setSpeed: Dispatch<SetStateAction<number>>
-  start: boolean
+  start: boolean,
+  sliderStyle: any
 }
-const SliderCmp: FC<Props> = ({ setSpeed, start }) => {
+const SliderCmp: FC<Props> = ({ setSpeed, start, sliderStyle }) => {
   return (
-    <View style={styles.sliderContainer}>
+    <Animated.View style={[styles.sliderContainer, sliderStyle]}>
       <View style={styles.valuesContainer}>
         <Text style={styles.values}>500</Text>
         <Text style={[styles.values, { marginLeft: 10 }]}>1500</Text>
@@ -28,7 +30,7 @@ const SliderCmp: FC<Props> = ({ setSpeed, start }) => {
         onSlidingComplete={value => setSpeed(value)}
         disabled={start}
       />
-    </View>
+    </Animated.View>
   )
 }
 

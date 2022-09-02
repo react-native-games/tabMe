@@ -1,5 +1,4 @@
 import {
-  Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,8 +13,7 @@ import { MenuSheet, SliderCmp, StartButton, Target } from '../components';
 import { cache } from '../utils';
 import colors from '../constants/colors';
 import { useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
-
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../constants/styleConst';
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
@@ -33,7 +31,7 @@ const TabMe = () => {
     useRotateTarget(targetTranslateX, targetTranslateY);
 
   // START BUTTON
-  const { buttonAnimation, startBtnStyle } = useStartButton()
+  const { buttonAnimation, startBtnStyle, sliderStyle } = useStartButton()
 
   // TIMER LEVEL
   const { timerLevelAnim, timerLevelAnimStyle } =
@@ -82,7 +80,8 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
-      <SliderCmp start={start} setSpeed={setSpeed} />
+      <SliderCmp start={start} setSpeed={setSpeed} sliderStyle={sliderStyle} />
+
       <Animated.View
         style={[styles.timerLevel, timerLevelAnimStyle]}
       />

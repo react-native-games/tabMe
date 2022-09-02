@@ -14,7 +14,13 @@ const useStartButton = () => {
     return { opacity, transform: [{ translateY }] };
   });
 
-  return { buttonAnimation, startBtnStyle };
+  const sliderStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);
+    const translateY = interpolate(buttonAnimation.value, [0, 1], [0, -200]);
+    return { opacity, transform: [{ translateY }] };
+  });
+
+  return { buttonAnimation, startBtnStyle, sliderStyle };
 };
 
 export default useStartButton;
