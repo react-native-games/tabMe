@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: -80,
-    backgroundColor: colors.menu,
+    backgroundColor: colors.darkBlue,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',

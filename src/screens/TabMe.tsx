@@ -93,23 +93,24 @@ const TabMe = () => {
         timerLevelAnim={timerLevelAnim}
       />
 
-      <MenuSheet
-        menuGestureHandler={menuGestureHandler}
-        menuAnimStyle={menuAnimStyle}
-      />
-
-
-      {start ?
+      {start
+        ?
         <View style={styles.pointsContainer}>
           <Text style={styles.points}>{points.toFixed(0)}</Text>
-        </View> : <IoniconsIcon
+        </View>
+        : <IoniconsIcon
           name="menu"
           size={30}
-          color={colors.menu}
+          color={colors.button}
           onPress={menuHandler}
           style={styles.menuIcon}
         />
       }
+
+      <MenuSheet
+        menuGestureHandler={menuGestureHandler}
+        menuAnimStyle={menuAnimStyle}
+      />
 
     </TouchableOpacity>
   );
