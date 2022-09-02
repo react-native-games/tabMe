@@ -12,11 +12,17 @@ const useMoveTarget = (
   setReset: Dispatch<SetStateAction<boolean>>,
   start: boolean,
   speed: number,
+  setSpeed: Dispatch<SetStateAction<number>>,
 ) => {
   const targetTranslateX = useSharedValue<number>(0);
   const targetTranslateY = useSharedValue<number>(0);
 
-  // Target moving around
+  /*  
+  If user presses anywhere on the screen,
+  then reste is true and the target will move around.
+  This is made is case target is off the screen, 
+  thus, user can bring it back in.
+  */
   useEffect(() => {
     if (reset)
       setTimeout(() => {
@@ -29,34 +35,47 @@ const useMoveTarget = (
     }
   }, [reset, start]);
 
+  // MOVE TARGET
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (start) {
+        moveXAround();
+        moveYAround();
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
+  // INCREASE SPEED EVERY 10 SECONDS BY 100
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (start) {
+        setSpeed((prev) => prev - 100);
+      }
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
   const randomNum = () => {
-    const nums = [-1, 1, -1, 1, -1, 1];
+    const nums = [1, 0.5, -1, -1.5, -1, 0.2];
     const n = nums[Math.floor(Math.random() * nums.length)];
-    return Math.random() * n * width - targetWidth;
+    return Math.random() * n * width;
   };
 
   const moveXAround = () => {
-    targetTranslateX.value = withRepeat(
-      withSequence(
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-      ),
-      -1,
-      true,
-    );
+    console.log('moveXAround', randomNum(), speed);
+
+    targetTranslateX.value = withTiming(randomNum(), { duration: speed });
   };
 
   const moveYAround = () => {
-    targetTranslateY.value = withRepeat(
-      withSequence(
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-        withTiming(randomNum(), { duration: speed }),
-      ),
-      -1,
-      true,
-    );
+    targetTranslateY.value = withTiming(randomNum(), { duration: speed });
   };
 
   return { targetTranslateX, targetTranslateY };

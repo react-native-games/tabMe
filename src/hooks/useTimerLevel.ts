@@ -38,7 +38,6 @@ const useTimerLevel = (
 
   const savePoints = async () => {
     const savedPoints = await cache.get('points');
-    console.log('savePoints', savedPoints);
     if (savedPoints) {
       let pnts = savedPoints + points;
       cache.set('points', pnts);

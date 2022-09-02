@@ -10,7 +10,6 @@ import Animated from 'react-native-reanimated';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import { MenuSheet, SliderCmp, StartButton, Target } from '../components';
-import { cache } from '../utils';
 import colors from '../constants/colors';
 import { useGetPoints, useMenuSheet, useMoveTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
@@ -24,7 +23,7 @@ const TabMe = () => {
 
   // MOVE TARGET
   const { targetTranslateX, targetTranslateY } =
-    useMoveTarget(reset, setReset, start, speed)
+    useMoveTarget(reset, setReset, start, speed, setSpeed)
 
   // ROTATE TARGET
   const { targetAnimStyle, targetAnimStyle2, innerColorAnimStyle } =
