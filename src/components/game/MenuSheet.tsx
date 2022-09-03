@@ -1,15 +1,35 @@
-import { StyleSheet, Text } from 'react-native'
-import React, { FC } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import React, { FC, useEffect, useState } from 'react'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
 import colors from '../../constants/colors'
+import { cache } from '../../utils'
+import str from '../../constants/str'
+import BoldText from '../UI/BoldText'
 
-interface Props { menuGestureHandler: any, menuAnimStyle: any }
-const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle }) => {
+interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean }
+const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen }) => {
+
+  const [points, setPoints] = useState<number>(0);
+
+  const getPoints = async () => {
+    const p = await cache.get(str.points);
+    setPoints(p);
+  };
+
+  useEffect(() => {
+    getPoints();
+  }, [menuIsOpen]);
+
   return (
     <PanGestureHandler onGestureEvent={menuGestureHandler} >
       <Animated.View style={[styles.menu, menuAnimStyle]} >
-        <Text>Sheet</Text>
+        <View style={styles.menuItems} >
+          <View style={styles.scoreContainer} >
+            <BoldText>Highest score: </BoldText>
+            <BoldText style={styles.points} >{points}</BoldText>
+          </View>
+        </View>
       </Animated.View>
     </PanGestureHandler>
   )
@@ -35,4 +55,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  menuItems: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  points: {
+    color: colors.text
+  },
+  scoreContainer: {
+    flexDirection: 'row'
+  }
 })

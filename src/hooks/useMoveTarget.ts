@@ -69,8 +69,6 @@ const useMoveTarget = (
   };
 
   const moveXAround = () => {
-    console.log('moveXAround', randomNum(), speed);
-
     targetTranslateX.value = withTiming(randomNum(), { duration: speed });
   };
 

@@ -3,6 +3,7 @@ export { default as RenderAnimation } from './animations/RenderAnimation';
 
 //UI
 export { default as IOSButton } from './UI/IOSButton';
+export { default as BoldText } from './UI/BoldText';
 
 // Game
 export { default as FakeTarget } from './game/FakeTarget';

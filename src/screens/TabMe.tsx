@@ -5,13 +5,13 @@ import {
   Vibration,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Animated from 'react-native-reanimated';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import { FakeTarget, MenuSheet, SliderCmp, StartButton, Target } from '../components';
 import colors from '../constants/colors';
-import { useFakeTapTarget, useGetPoints, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
+import { useFakeTapTarget, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
 import useMoveFakeTarget from '../hooks/useMoveFakeTarget';
 
@@ -39,7 +39,7 @@ const TabMe = () => {
     useRotateFakeTarget(fakeTargetTranslateX, fakeTargetTranslateY);
 
   // START BUTTON
-  const { buttonAnimation, startBtnStyle, sliderStyle } = useStartButton()
+  const { buttonAnimation, startBtnStyle, sliderStyle } = useStartButton(setPoints, start)
 
   // TIMER LEVEL
   const { timerLevelAnim, timerLevelAnimStyle } =
@@ -80,11 +80,8 @@ const TabMe = () => {
   );
 
   // MENU SHEET
-  const { menuHandler, menuGestureHandler, menuAnimStyle } =
-    useMenuSheet()
-
-  // GET POINTS FROM ASYNCSTORAGE
-  useGetPoints(setPoints, start);
+  const { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen } =
+    useMenuSheet(start)
 
   const resetHandler = () => {
     setReset(true);
@@ -140,6 +137,7 @@ const TabMe = () => {
       <MenuSheet
         menuGestureHandler={menuGestureHandler}
         menuAnimStyle={menuAnimStyle}
+        menuIsOpen={menuIsOpen}
       />
 
     </TouchableOpacity>

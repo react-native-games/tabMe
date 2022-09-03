@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 
-const useStartButton = () => {
+const useStartButton = (
+  setPoints: Dispatch<SetStateAction<number>>,
+  start: boolean,
+) => {
   const buttonAnimation = useSharedValue(0);
+
+  useEffect(() => {
+    setPoints(0);
+  }, [start]);
 
   const startBtnStyle = useAnimatedStyle(() => {
     const opacity = interpolate(buttonAnimation.value, [0, 1], [1, 0]);

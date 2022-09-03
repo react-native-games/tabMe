@@ -7,6 +7,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import str from '../constants/str';
 import { height } from '../constants/styleConst';
 import { cache } from '../utils';
 
@@ -37,18 +38,19 @@ const useTimerLevel = (
   };
 
   const savePoints = async () => {
-    const savedPoints = await cache.get('points');
+    const savedPoints = await cache.get(str.points);
     if (savedPoints) {
-      let pnts = savedPoints + points;
-      cache.set('points', pnts);
+      if (savedPoints > points) return;
+      else cache.set(str.points, points);
     } else {
-      cache.set('points', points);
+      cache.set(str.points, points);
     }
+    const pnts = await cache.get(str.points);
   };
 
   const timerLevelAnimStyle = useAnimatedStyle(() => {
     /* Check if time is up */
-    if (start && Math.round(timerLevelAnimation.value) > height) {
+    if (Math.round(timerLevelAnimation.value) > height) {
       buttonAnimation.value = withTiming(0, { duration: 300 });
       runOnJS(setStart)(false);
       runOnJS(savePoints)();

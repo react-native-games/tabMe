@@ -64,8 +64,6 @@ const useMoveFakeTarget = (
   };
 
   const moveXAround = () => {
-    console.log('moveXAround', randomNum(), speed);
-
     fakeTargetTranslateX.value = withTiming(randomNum(), { duration: speed });
   };
 
