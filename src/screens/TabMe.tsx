@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import Animated from 'react-native-reanimated';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
-import { FakeTarget, MenuSheet, SliderCmp, StartButton, Target } from '../components';
+import { FakeTarget, FractalsAnimation, MenuSheet, SliderCmp, StarsAnimation, StartButton, Target } from '../components';
 import colors from '../constants/colors';
 import { useFakeTapTarget, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
@@ -90,8 +90,9 @@ const TabMe = () => {
   }
 
   const renderInfo = () => {
+    if (!info)
+      menuTop.value = height;
     setInfo(prev => !prev)
-    menuTop.value = height;
   }
 
   if (info)
@@ -103,6 +104,12 @@ const TabMe = () => {
       style={styles.container}
       disabled={!start}
     >
+      <StarsAnimation top={30} />
+      <StarsAnimation top={200} />
+      <FractalsAnimation top={height / 2 - 150} />
+      <StarsAnimation top={height - 350} />
+      <StarsAnimation top={height - 200} />
+
       <SliderCmp start={start} setSpeed={setSpeed} sliderStyle={sliderStyle} />
 
       <Animated.View
