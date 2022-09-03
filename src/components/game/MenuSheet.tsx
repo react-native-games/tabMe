@@ -6,9 +6,10 @@ import colors from '../../constants/colors'
 import { cache } from '../../utils'
 import str from '../../constants/str'
 import BoldText from '../UI/BoldText'
+import Button from '../UI/Button'
 
-interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean }
-const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen }) => {
+interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean, renderInfo: any }
+const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, renderInfo }) => {
 
   const [points, setPoints] = useState<number>(0);
 
@@ -29,6 +30,7 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen })
             <BoldText>Highest score: </BoldText>
             <BoldText style={styles.points} >{points}</BoldText>
           </View>
+          <Button style={styles.infoButton} title='info' onPress={renderInfo} />
         </View>
       </Animated.View>
     </PanGestureHandler>
@@ -38,6 +40,10 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen })
 export default MenuSheet
 
 const styles = StyleSheet.create({
+  infoButton: {
+    width: 150,
+    marginTop: 20
+  },
   menu: {
     position: 'absolute',
     left: 0,
@@ -64,6 +70,7 @@ const styles = StyleSheet.create({
     color: colors.text
   },
   scoreContainer: {
-    flexDirection: 'row'
+    // flexDirection: 'row'
+    alignItems: 'center'
   }
 })

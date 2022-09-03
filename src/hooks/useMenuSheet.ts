@@ -26,7 +26,7 @@ const useMenuSheet = (start: boolean) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 
   const menuHandler = () => {
-    menuTop.value = withSpring(height / 2, MENU_SPRING_CONFIG);
+    menuTop.value = withSpring(height - 250, MENU_SPRING_CONFIG);
     setMenuIsOpen(true);
   };
 
@@ -41,11 +41,11 @@ const useMenuSheet = (start: boolean) => {
       menuTop.value = context.startTop + event.translationY;
     },
     onEnd() {
-      if (menuTop.value > height / 2 + 200) {
+      if (menuTop.value > height - 150) {
         menuTop.value = height;
         runOnJS(setMenuIsOpen)(false);
       } else {
-        menuTop.value = height / 2;
+        menuTop.value = height - 250;
       }
     },
   });
@@ -56,7 +56,13 @@ const useMenuSheet = (start: boolean) => {
       top: withSpring(menuTop.value, MENU_SPRING_CONFIG),
     };
   });
-  return { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen };
+  return {
+    menuHandler,
+    menuGestureHandler,
+    menuAnimStyle,
+    menuIsOpen,
+    menuTop,
+  };
 };
 
 export default useMenuSheet;

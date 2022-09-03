@@ -40,7 +40,9 @@ const styles = StyleSheet.create({
     borderRadius: targetWidth,
     backgroundColor: colors.button,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.buttonText
   },
   startButtonText: {
     fontSize: 30,

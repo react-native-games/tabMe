@@ -14,10 +14,12 @@ import colors from '../constants/colors';
 import { useFakeTapTarget, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
 import useMoveFakeTarget from '../hooks/useMoveFakeTarget';
+import Info from './Info'
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
+  const [info, setInfo] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
@@ -80,12 +82,20 @@ const TabMe = () => {
   );
 
   // MENU SHEET
-  const { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen } =
+  const { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen, menuTop } =
     useMenuSheet(start)
 
   const resetHandler = () => {
     setReset(true);
   }
+
+  const renderInfo = () => {
+    setInfo(prev => !prev)
+    menuTop.value = height;
+  }
+
+  if (info)
+    return <Info renderInfo={renderInfo} />
 
   return (
     <TouchableOpacity
@@ -138,6 +148,7 @@ const TabMe = () => {
         menuGestureHandler={menuGestureHandler}
         menuAnimStyle={menuAnimStyle}
         menuIsOpen={menuIsOpen}
+        renderInfo={renderInfo}
       />
 
     </TouchableOpacity>
