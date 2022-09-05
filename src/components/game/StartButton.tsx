@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import Animated from 'react-native-reanimated'
 import { height, targetWidth, width } from '../../constants/styleConst'
 import colors from '../../constants/colors'
-
+import { startButtonFontSize } from '../../../styles/responsive'
 interface Props {
   startBtnStyle: any,
   timerLevelAnim: any
@@ -11,6 +11,8 @@ interface Props {
 }
 const StartButton: FC<Props> = ({
   startBtnStyle, timerLevelAnim }) => {
+
+
   return (
     <Animated.View
       style={[
@@ -42,10 +44,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: colors.buttonText
+    borderColor: colors.buttonText,
+    padding: 10,
   },
   startButtonText: {
-    fontSize: 30,
+    fontSize: startButtonFontSize,
     color: colors.buttonText
   },
 })

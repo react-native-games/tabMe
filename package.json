@@ -5,7 +5,7 @@
   "scripts": {
     "a": "react-native run-android",
     "i": "react-native run-ios",
-    "pro5": "react-native run-ios --udid 4298DA74-8863-4C92-8085-CF75BB61E792",
+    "pro": "react-native run-ios --udid 4298DA74-8863-4C92-8085-CF75BB61E792",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
