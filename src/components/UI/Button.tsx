@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     elevetion: 20,
     shadowColor: colors.buttonText,
     shadowOpacity: .6,
-    shadowOffset: { width: 3, height: 3 }
+    shadowOffset: { width: 3, height: 3 },
   },
 });
 

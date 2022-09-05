@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated'
+import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+
 import colors from '../../constants/colors'
 import { cache } from '../../utils'
 import str from '../../constants/str'
@@ -10,6 +12,7 @@ import Button from '../UI/Button'
 
 interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean, renderInfo: any }
 const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, renderInfo }) => {
+  const iconAnim = useSharedValue(0);
 
   const [points, setPoints] = useState<number>(0);
 
@@ -22,9 +25,33 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, r
     getPoints();
   }, [menuIsOpen]);
 
+  const animateIcon = () => {
+    iconAnim.value = withSequence(
+      withSpring(10),
+      withSpring(0),
+      withSpring(10),
+      withSpring(0),
+    )
+  }
+
+  const iconAnimStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: iconAnim.value }]
+    }
+  })
+
   return (
     <PanGestureHandler onGestureEvent={menuGestureHandler} >
       <Animated.View style={[styles.menu, menuAnimStyle]} >
+        <Animated.View style={iconAnimStyle} >
+          <IoniconsIcon
+            name="ios-chevron-down"
+            size={30}
+            color={colors.button}
+            style={{ marginTop: -25 }}
+            onPress={animateIcon}
+          />
+        </Animated.View>
         <View style={styles.menuItems} >
           <View style={styles.scoreContainer} >
             <BoldText>Highest score: </BoldText>
@@ -41,8 +68,10 @@ export default MenuSheet
 
 const styles = StyleSheet.create({
   infoButton: {
-    width: 150,
-    marginTop: 20
+    width: 100,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   menu: {
     position: 'absolute',
