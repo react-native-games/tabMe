@@ -60,7 +60,7 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen })
           <ScrollView contentContainerStyle={[styles.scrollView]} >
             <Text style={styles.body} >
               {`
-1. You may choose the points you want to get per hit from the slider above. Note that the more points you select, the faster the target will move. Note also that the speed of the target increases by 100 milliseconds every 10 seconds. 
+1. You may choose the points you want to get per hit from the slider above. Note that the more points you select, the faster the target will move. Note also that the speed of the target increases by 70 milliseconds every second. 
 
 2. Avoid to hit the fake-target (the red one). If you hit it you lose 1000 points. 
 

@@ -6,11 +6,12 @@ import colors from '../../constants/colors'
 import Animated from 'react-native-reanimated'
 
 interface Props {
-  setSpeed: Dispatch<SetStateAction<number>>
+  setSpeed: Dispatch<SetStateAction<number>>,
+  setInitialSpeed: Dispatch<SetStateAction<number>>
   start: boolean,
   sliderStyle: any
 }
-const SliderCmp: FC<Props> = ({ setSpeed, start, sliderStyle }) => {
+const SliderCmp: FC<Props> = ({ setSpeed, setInitialSpeed, start, sliderStyle }) => {
   return (
     <Animated.View style={[styles.sliderContainer, sliderStyle]}>
       <View style={styles.valuesContainer}>
@@ -27,7 +28,10 @@ const SliderCmp: FC<Props> = ({ setSpeed, start, sliderStyle }) => {
         maximumValue={2500}
         minimumTrackTintColor="red"
         maximumTrackTintColor="cyan"
-        onSlidingComplete={value => setSpeed(value)}
+        onSlidingComplete={value => {
+          setInitialSpeed(value)
+          setSpeed(value)
+        }}
         disabled={start}
       />
     </Animated.View>

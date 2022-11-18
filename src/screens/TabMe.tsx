@@ -71,13 +71,11 @@ const TabMe = () => {
   const { tapFakeTargetPanGestureEvent, showFakeTargetLottieAnim } = useFakeTapTarget(
     duration,
     points,
-    setDuration,
     setPoints,
     speed,
     start,
     fakeTargetTranslateX,
     fakeTargetTranslateY,
-    timerLevelAnim,
   );
 
   // MENU SHEET

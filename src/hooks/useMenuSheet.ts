@@ -59,7 +59,6 @@ const useMenuSheet = (start: boolean) => {
     menuGestureHandler,
     menuAnimStyle,
     menuIsOpen,
-    menuTop,
   };
 };
 
