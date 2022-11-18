@@ -1,11 +1,6 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
-import {
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
-import { targetWidth, width } from '../constants/styleConst';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { width } from '../constants/styleConst';
 
 const useMoveTarget = (
   reset: boolean,
@@ -53,7 +48,7 @@ const useMoveTarget = (
   useEffect(() => {
     const interval = setInterval(() => {
       if (start) {
-        setSpeed((prev) => prev - 70);
+        setSpeed((prev) => prev + 70);
       }
     }, 1000);
 

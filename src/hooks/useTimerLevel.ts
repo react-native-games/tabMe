@@ -16,9 +16,10 @@ const useTimerLevel = (
   duration: number,
   points: number,
   setStart: Dispatch<SetStateAction<boolean>>,
-  start: boolean,
   targetTranslateX: any,
   targetTranslateY: any,
+  setSpeed: Dispatch<SetStateAction<number>>,
+  initialSpeed: number,
 ) => {
   const timerLevelAnimation = useSharedValue(height);
 
@@ -54,6 +55,7 @@ const useTimerLevel = (
       buttonAnimation.value = withTiming(0, { duration: 300 });
       runOnJS(setStart)(false);
       runOnJS(savePoints)();
+      runOnJS(setSpeed)(initialSpeed);
       targetTranslateX.value = withSpring(0);
       targetTranslateY.value = withSpring(0);
     }

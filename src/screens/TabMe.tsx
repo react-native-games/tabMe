@@ -18,9 +18,9 @@ import useMoveFakeTarget from '../hooks/useMoveFakeTarget';
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
-  const [info, setInfo] = useState<boolean>(false);
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
+  const [initialSpeed, setInitialSpeed] = useState<number>(1500);
   const [duration, setDuration] = useState<number>(5000);
 
   // MOVE TARGET
@@ -49,9 +49,10 @@ const TabMe = () => {
       duration,
       points,
       setStart,
-      start,
       targetTranslateX,
       targetTranslateY,
+      setSpeed,
+      initialSpeed
     );
 
   // TAP TARGET
@@ -79,7 +80,7 @@ const TabMe = () => {
   );
 
   // MENU SHEET
-  const { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen, menuTop } =
+  const { menuHandler, menuGestureHandler, menuAnimStyle, menuIsOpen } =
     useMenuSheet(start)
 
   const resetHandler = () => {
@@ -98,7 +99,7 @@ const TabMe = () => {
       <StarsAnimation top={height - 350} />
       <StarsAnimation top={height - 200} />
 
-      <SliderCmp start={start} setSpeed={setSpeed} sliderStyle={sliderStyle} />
+      <SliderCmp start={start} setSpeed={setSpeed} setInitialSpeed={setInitialSpeed} sliderStyle={sliderStyle} />
 
       <Animated.View
         style={[styles.timerLevel, timerLevelAnimStyle]}
