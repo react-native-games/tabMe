@@ -49,13 +49,13 @@ const useMoveTarget = (
     };
   });
 
-  // INCREASE SPEED EVERY 10 SECONDS BY 100
+  // INCREASE SPEED EVERY 1 SECONDS BY 70
   useEffect(() => {
     const interval = setInterval(() => {
       if (start) {
-        setSpeed((prev) => prev - 100);
+        setSpeed((prev) => prev - 70);
       }
-    }, 10000);
+    }, 1000);
 
     return () => {
       clearInterval(interval);
