@@ -9,6 +9,7 @@ import colors from '../../constants/colors'
 import { cache } from '../../utils'
 import str from '../../constants/str'
 import BoldText from '../UI/BoldText'
+import { height } from '../../constants/styleConst';
 
 interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean }
 const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen }) => {
@@ -64,7 +65,7 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen })
 
 2. Avoid to hit the fake-target (the red one). If you hit it you lose 1000 points. 
 
-3. The yellow line that appears when the game starts is the time limit, which is 3 seconds at the beginning. Every time you hit the target, you get again 3 seconds plus 88 miliseconds. If the time limit disappears below the screen, then the game is over. 
+3. The yellow line that appears when the game starts is the time limit, which is 3 seconds at the beginning. Every time you hit the target, you get again 3 seconds plus 88 milliseconds. If the time limit disappears below the screen, then the game is over. 
 
 4. Every time you finish a game, the highest score is saved in memory. `
 
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     color: '#cec4e1',
-    fontSize: RFPercentage(3),
+    fontSize: height < 900 ? RFPercentage(3) : RFPercentage(2.2),
     marginHorizontal: 5
   },
   container: {
