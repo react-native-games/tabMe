@@ -14,7 +14,6 @@ import colors from '../constants/colors';
 import { useFakeTapTarget, useMenuSheet, useMoveTarget, useRotateFakeTarget, useRotateTarget, useStartButton, useTapTarget, useTimerLevel } from '../hooks';
 import { height, width } from '../constants/styleConst';
 import useMoveFakeTarget from '../hooks/useMoveFakeTarget';
-import Info from './Info'
 
 const TabMe = () => {
   const [start, setStart] = useState<boolean>(false);
@@ -89,15 +88,6 @@ const TabMe = () => {
     setReset(true);
   }
 
-  const renderInfo = () => {
-    if (!info)
-      menuTop.value = height;
-    setInfo(prev => !prev)
-  }
-
-  if (info)
-    return <Info renderInfo={renderInfo} />
-
   return (
     <TouchableOpacity
       onPress={resetHandler}
@@ -143,8 +133,8 @@ const TabMe = () => {
           <Text style={styles.points}>{points.toFixed(0)}</Text>
         </View>
         : <IoniconsIcon
-          name="menu"
-          size={30}
+          name="information-circle-outline"
+          size={44}
           color={colors.button}
           onPress={menuHandler}
           style={styles.menuIcon}
@@ -155,7 +145,6 @@ const TabMe = () => {
         menuGestureHandler={menuGestureHandler}
         menuAnimStyle={menuAnimStyle}
         menuIsOpen={menuIsOpen}
-        renderInfo={renderInfo}
       />
 
     </TouchableOpacity>

@@ -1,17 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated'
+import { RFPercentage } from "react-native-responsive-fontsize";
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 import colors from '../../constants/colors'
 import { cache } from '../../utils'
 import str from '../../constants/str'
 import BoldText from '../UI/BoldText'
-import Button from '../UI/Button'
 
-interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean, renderInfo: any }
-const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, renderInfo }) => {
+interface Props { menuGestureHandler: any, menuAnimStyle: any, menuIsOpen: boolean }
+const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen }) => {
   const iconAnim = useSharedValue(0);
 
   const [points, setPoints] = useState<number>(0);
@@ -57,7 +57,21 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, r
             <BoldText>Highest score: </BoldText>
             <BoldText style={styles.points} >{points}</BoldText>
           </View>
-          <Button style={styles.infoButton} title='info' onPress={renderInfo} />
+          <ScrollView contentContainerStyle={[styles.scrollView]} >
+            <Text style={styles.body} >
+              {`
+1. You may choose the points you want to get per hit from the slider above. Note that the more points you select, the faster the target will move. Note also that the speed of the target increases by 100 milliseconds every 10 seconds. 
+
+2. Avoid to hit the fake-target (the red one). If you hit it you lose 1000 points. 
+
+3. The yellow line that appears when the game starts is the time limit. Every time you hit the target, you get more time. If the time limit disappears below, then the game is over. 
+
+4. Every time you finish a game, the highest score is saved in memory. 
+      `
+
+              }
+            </Text>
+          </ScrollView>
         </View>
       </Animated.View>
     </PanGestureHandler>
@@ -67,6 +81,17 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen, r
 export default MenuSheet
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    color: '#cec4e1',
+    fontSize: RFPercentage(3),
+    marginHorizontal: 5
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: colors.background,
+  },
   infoButton: {
     width: 100,
     marginTop: 20,
@@ -99,7 +124,12 @@ const styles = StyleSheet.create({
     color: colors.text
   },
   scoreContainer: {
-    // flexDirection: 'row'
     alignItems: 'center'
-  }
+  },
+  scrollView: {
+    paddingBottom: 88
+  },
+  title: {
+    alignSelf: 'center'
+  },
 })

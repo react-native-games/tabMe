@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   runOnJS,
   useAnimatedGestureHandler,
@@ -8,8 +8,6 @@ import {
 } from 'react-native-reanimated';
 import { height } from '../constants/styleConst';
 import { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import { cache } from '../utils';
-import str from '../constants/str';
 
 const MENU_SPRING_CONFIG = {
   damping: 80,
@@ -26,7 +24,7 @@ const useMenuSheet = (start: boolean) => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 
   const menuHandler = () => {
-    menuTop.value = withSpring(height - 250, MENU_SPRING_CONFIG);
+    menuTop.value = withSpring(height * 0.2, MENU_SPRING_CONFIG);
     setMenuIsOpen(true);
   };
 
@@ -41,7 +39,7 @@ const useMenuSheet = (start: boolean) => {
       menuTop.value = context.startTop + event.translationY;
     },
     onEnd() {
-      if (menuTop.value > height - 150) {
+      if (menuTop.value > height * 0.2 - 150) {
         menuTop.value = height;
         runOnJS(setMenuIsOpen)(false);
       } else {
