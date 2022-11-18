@@ -60,14 +60,13 @@ const MenuSheet: FC<Props> = ({ menuGestureHandler, menuAnimStyle, menuIsOpen })
           <ScrollView contentContainerStyle={[styles.scrollView]} >
             <Text style={styles.body} >
               {`
-1. You may choose the points you want to get per hit from the slider above. Note that the more points you select, the faster the target will move. Note also that the speed of the target increases by 70 milliseconds every second. 
+1. You may choose the points you want to get per hit from the slider above. Note that the more points you select, the faster the target will move. Note also that the speed of the target increases by 88 milliseconds every second. 
 
 2. Avoid to hit the fake-target (the red one). If you hit it you lose 1000 points. 
 
-3. The yellow line that appears when the game starts is the time limit. Every time you hit the target, you get more time. If the time limit disappears below, then the game is over. 
+3. The yellow line that appears when the game starts is the time limit, which is 3 seconds at the beginning. Every time you hit the target, you get again 3 seconds plus 88 miliseconds. If the time limit disappears below the screen, then the game is over. 
 
-4. Every time you finish a game, the highest score is saved in memory. 
-      `
+4. Every time you finish a game, the highest score is saved in memory. `
 
               }
             </Text>

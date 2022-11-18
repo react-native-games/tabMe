@@ -21,7 +21,7 @@ const TabMe = () => {
   const [points, setPoints] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1500);
   const [initialSpeed, setInitialSpeed] = useState<number>(1500);
-  const [duration, setDuration] = useState<number>(5000);
+  const [duration, setDuration] = useState<number>(3000);
 
   // MOVE TARGET
   const { targetTranslateX, targetTranslateY } =

@@ -23,20 +23,16 @@ const useTapTarget = (
   const tapTargetPanGestureEvent =
     useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
       onStart: (e, ctx) => {
-        console.log('tab');
         if (start) {
-          // runOnJS(setReset)(true);
           runOnJS(setPoints)(points + 3000 - Number(speed));
-          runOnJS(setDuration)(duration + 100);
+          runOnJS(setDuration)(duration + 88);
           runOnJS(timerLevelAnim)();
           showTargetLottieAnim.value = true;
           targetTranslateX.value = withSpring(Math.random() * width * 2);
           targetTranslateY.value = withSpring(Math.random() * width * 2);
         }
       },
-      onActive: (e, ctx) => {
-        console.log('tab2');
-      },
+      onActive: (e, ctx) => {},
       onEnd: (e) => {
         showTargetLottieAnim.value = false;
       },

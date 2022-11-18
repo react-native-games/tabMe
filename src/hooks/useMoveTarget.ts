@@ -48,7 +48,7 @@ const useMoveTarget = (
   useEffect(() => {
     const interval = setInterval(() => {
       if (start) {
-        setSpeed((prev) => prev + 70);
+        setSpeed((prev) => prev + 88);
       }
     }, 1000);
 
